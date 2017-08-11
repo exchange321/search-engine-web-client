@@ -1,0 +1,3 @@
+**/*.test.js
+webpack.*.config.js
+tools/**/*.js
