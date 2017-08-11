@@ -1,0 +1,9 @@
+{
+  "name": "accessible-search-engine-web-client",
+  "version": "1.0.0",
+  "description": "Web client component of the accessible search engine for people with intellectual disabilities",
+  "main": "index.js",
+  "repository": "https://github.com/exchange321/search-engine-web-client",
+  "author": "Wayuki <adchuenhong@gmail.com>",
+  "license": "MIT"
+}
