@@ -7,7 +7,7 @@ The web client component of the accessible search engine for people with intelle
 Prototyping
 
 ## To-Dos
-- [ ] Development Environment Setup
+- [x] Development Environment Setup
 - [ ] Wireframe
   - [ ] Search Page
   - [ ] Search Result Page
