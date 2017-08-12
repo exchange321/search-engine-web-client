@@ -9,8 +9,8 @@ Prototyping
 ## To-Dos
 - [x] Development Environment Setup
 - [ ] Wireframe
-  - [ ] Search Page
-  - [ ] Search Result Page
+  - [x] Search Component
+  - [ ] Search Result Component
 - [ ] Service Worker Initialization
   - [ ] Installation
   - [ ] Communication
