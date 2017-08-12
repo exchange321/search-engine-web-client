@@ -23,6 +23,14 @@ $--xs-md: "screen and (max-width: 991px)";
 
 /* ROOT - START */
 
+@mixin --transition-all() {
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -ms-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+
 /* ROOT - END */
 
 /* --------------------------------------------------------------------------------- */
@@ -40,5 +48,115 @@ body {
 /* LIBRARY - START */
 
 /* LIBRARY - END */
+
+/* --------------------------------------------------------------------------------- */
+
+/* APP PAGE - START */
+
+div.app-container {
+  min-height: 100vh;
+}
+
+/* APP PAGE - END */
+
+/* --------------------------------------------------------------------------------- */
+
+/* SEARCH - START */
+
+.search-container {
+  position: relative;
+  & .search {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    background-color: white;
+    @include --transition-all();
+    @media #{$--sm} {
+      padding: 0;
+    }
+    @media #{$--md} {
+      height: 7rem;
+    }
+    &.full-page {
+      height: 100%;
+    }
+    & form {
+      flex: 1;
+      & .input-group {
+        position: relative;
+        z-index: 3;
+        -webkit-box-shadow: 0 3px 8px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+        -moz-box-shadow: 0 3px 8px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+        box-shadow: 0 3px 8px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+        & .search-wrapper {
+          width: 100%;
+          & input#query {
+            width: 100%;
+            border-radius: 0;
+            border: 0;
+          }
+          & .suggestions-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            left: 0;
+            border-top: 0;
+            z-index: 4;
+            background-color: white;
+            -webkit-box-shadow: 0 3px 8px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            -moz-box-shadow: 0 3px 8px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            box-shadow: 0 3px 8px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            & .suggestion {
+              padding: 0 .8rem;
+              &:hover, &.highlighted {
+                background-color: #f0f0f0;
+              }
+            }
+          }
+        }
+        & button.btn-submit {
+          background-color: transparent;
+          color: #025aa5;
+          flex-direction: row;
+          border-radius: 0;
+          border: 0;
+          &:hover {
+            cursor: pointer;
+            background-color: #025aa5;
+            color: white;
+          }
+          & i.fa-search {
+            margin-right: .25rem;
+          }
+          @media #{$--xs-sm} {
+            & span {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* SEARCH - END */
+
+/* --------------------------------------------------------------------------------- */
+
+/* SEARCH RESULTS - START */
+
+.search-results-container {
+  padding-top: 5rem;
+  @media #{$--md} {
+    padding-top: 7rem;
+  }
+}
+
+/* SEARCH RESULTS - END */
 
 /* --------------------------------------------------------------------------------- */
