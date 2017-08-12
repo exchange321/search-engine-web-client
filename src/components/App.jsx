@@ -56,19 +56,18 @@ class App extends Component {
     return (
       <MuiThemeProvider>
         <div className="app-container">
-          <div className="search-container">
+          <div className={`search-container container ${!triggered ? 'full' : ''}`}>
             <Search
               query={query}
-              fullPage={!triggered}
               suggestions={suggestions}
               onQueryChange={this.handleQueryChange}
               onFormSubmit={this.handleSearchFormSubmit}
             />
           </div>
-          <div className="search-results-container container">
+          <div className={`search-results-container container ${triggered ? 'full' : ''}`}>
             {
-              searchResults.length ? (
-                <SearchResults />
+              triggered ? (
+                <SearchResults results={searchResults} />
               ) : null
             }
           </div>

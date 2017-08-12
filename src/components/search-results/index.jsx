@@ -3,14 +3,10 @@
  */
 import React from 'react';
 
-import SearchResult from './search-result/index.jsx';
-
 const SearchResults = () => (
   <div>
-    <SearchResult />
+    This is SearchResults
   </div>
 );
-
-SearchResults.propTypes = {};
 
 export default SearchResults;

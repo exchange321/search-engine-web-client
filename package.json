@@ -8,14 +8,13 @@
   "license": "MIT",
   "scripts": {
     "prestart": "babel-node tools/startMessage.js",
-    "start": "npm-run-all --parallel open:src test",
+    "start": "npm-run-all --parallel open:src",
     "open:src": "babel-node tools/srcServer.js",
     "test": "jest --watchAll"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "bootstrap": "4.0.0-alpha.6",
-    "d3": "^4.10.0",
     "font-awesome": "^4.7.0",
     "history": "^4.6.3",
     "jquery": "^3.2.1",

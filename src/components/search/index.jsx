@@ -5,10 +5,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AutoComplete from 'react-autocomplete';
 
-const Search = ({ query, fullPage, suggestions, onQueryChange, onFormSubmit }) => {
+const Search = ({ query, suggestions, onQueryChange, onFormSubmit }) => {
   let submitBtn;
   return (
-    <div className={`search container ${fullPage ? 'full-page' : ''}`}>
+    <div className="search">
       <form
         onSubmit={(e) => {
           onFormSubmit(e);
@@ -68,7 +68,6 @@ const Search = ({ query, fullPage, suggestions, onQueryChange, onFormSubmit }) =
 
 Search.propTypes = {
   query: PropTypes.string.isRequired,
-  fullPage: PropTypes.bool.isRequired,
   suggestions: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string.isRequired,
   })).isRequired,

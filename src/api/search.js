@@ -6,7 +6,7 @@ export const getCompletions = query => (
       if (query.length > 0) {
         resolve([
           {
-            key: 1,
+            key: '1',
             label: 'apple',
           },
         ]);
