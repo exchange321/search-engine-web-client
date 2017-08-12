@@ -1,0 +1,44 @@
+/* --------------------------------------------------------------------------------- */
+
+/* SETUP - START */
+
+$--xs: "screen and (min-width: 320px)";
+$--sm: "screen and (min-width: 576px)";
+$--md: "screen and (min-width: 768px)";
+$--lg: "screen and (min-width: 992px)";
+$--xl: "screen and (min-width: 1200px)";
+
+$--xs-only: "screen and (min-width: 320px) and (max-width: 575px)";
+$--sm-only: "screen and (min-width: 576px) and (max-width: 767px)";
+$--md-only: "screen and (min-width: 768px) and (max-width: 991px)";
+$--lg-only: "screen and (min-width: 992px) and (max-width: 1199px)";
+$--xl-only: "screen and (min-width: 1200px)";
+
+$--xs-sm: "screen and (max-width: 767px)";
+$--xs-md: "screen and (max-width: 991px)";
+
+/* SETUP - END */
+
+/* --------------------------------------------------------------------------------- */
+
+/* ROOT - START */
+
+/* ROOT - END */
+
+/* --------------------------------------------------------------------------------- */
+
+/* GLOBAL - START */
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+/* GLOBAL - END */
+
+/* --------------------------------------------------------------------------------- */
+
+/* LIBRARY - START */
+
+/* LIBRARY - END */
+
+/* --------------------------------------------------------------------------------- */
