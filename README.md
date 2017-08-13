@@ -7,18 +7,19 @@ The web client component of the accessible search engine for people with intelle
 Prototyping
 
 ## To-Dos
-- [x] Development Environment Setup
-- [ ] Wireframe
-  - [x] Search Component
-  - [ ] Search Result Component
-- [ ] Service Worker Initialization
-  - [ ] Installation
+- [x] Service Worker Initialization
+  - [x] Installation
   - [ ] Communication
 - [ ] Web Notification
-  - [ ] Notification Invitation
   - [ ] Notification Trigger
 - [ ] Simulating Interactive Components
   - [ ] Linking Search Result Event with Web Notification Trigger
 
 ## Completed
+- [x] Development Environment Setup
+- [x] Wireframe
+  - [x] Search Component
+  - [x] Search Result Component
+- [ ] Web Notification
+  - [x] Notification Invitation
 
