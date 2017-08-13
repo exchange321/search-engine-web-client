@@ -6,9 +6,11 @@ import PropTypes from 'prop-types';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { routerActions } from 'react-router-redux';
 import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEvents';
 import applyUpdate from 'serviceworker-webpack-plugin/lib/browser/applyUpdate';
+import QueryString from 'query-string';
 
 import loader from '../images/gif-loader.gif';
 
@@ -23,10 +25,14 @@ import SearchResults from './search-results/index.jsx';
   }),
   dispatch => ({
     actions: bindActionCreators(appActions, dispatch),
+    routerActions: bindActionCreators(routerActions, dispatch),
   }),
 )
 class App extends Component {
   static propTypes = {
+    location: PropTypes.shape({
+      search: PropTypes.string,
+    }).isRequired,
     search: PropTypes.shape({
       query: PropTypes.string.isRequired,
       triggered: PropTypes.bool.isRequired,
@@ -56,6 +62,9 @@ class App extends Component {
       enableServiceWorker: PropTypes.func.isRequired,
       disableServiceWorker: PropTypes.func.isRequired,
     }).isRequired,
+    routerActions: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
   };
   state = {
     loadingResults: false,
@@ -72,9 +81,16 @@ class App extends Component {
         });
       }
     }
+    if (this.props.location && this.props.location.search) {
+      const { query } = QueryString.parse(this.props.location.search);
+      if (query) {
+        this.handleSearching(query, false);
+      }
+    }
   }
   registerServiceWorker = () => {
     const registration = runtime.register();
+    this.props.actions.enableServiceWorker();
     registerEvents(registration, {
       onInstalled: () => {
         this.props.actions.enableServiceWorker();
@@ -84,6 +100,9 @@ class App extends Component {
         applyUpdate().then(() => {
           window.location.reload();
         });
+      },
+      onUpdating: () => {
+        this.props.actions.disableServiceWorker();
       },
       onUpdateFailed: () => {
         this.props.actions.disableServiceWorker();
@@ -102,18 +121,23 @@ class App extends Component {
       search: {
         query,
       },
-      actions: {
-        handleQuerySubmit,
-        triggerSearchState,
-      },
     } = this.props;
     if (query.length > 0) {
-      triggerSearchState();
-      this.setState({
-        loadingResults: true,
-      });
-      handleQuerySubmit(query).then(() => this.setState({ loadingResults: false }));
+      this.handleSearching(query);
     }
+  };
+  handleSearching = (query, redirect = true) => {
+    this.props.actions.triggerSearchState();
+    this.setState({
+      loadingResults: true,
+    });
+    document.title = `${query} - ASE Search`;
+    if (redirect) {
+      this.props.routerActions.push(`/?${QueryString.stringify({ query })}`);
+    }
+    this.props.actions.handleQuerySubmit(query).then(() => (
+      this.setState({ loadingResults: false })
+    ));
   };
 
   render() {
