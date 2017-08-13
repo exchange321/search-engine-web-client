@@ -131,7 +131,7 @@ class App extends Component {
     this.setState({
       loadingResults: true,
     });
-    document.title = `${query} - ASE Search`;
+    document.title = `${query} - AcceSE Search`;
     if (redirect) {
       this.props.routerActions.push(`/?${QueryString.stringify({ query })}`);
     }

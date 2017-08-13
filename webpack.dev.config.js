@@ -4,6 +4,8 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 
 module.exports = {
   devtool: 'source-map',
@@ -71,6 +73,44 @@ module.exports = {
       alwaysWriteToDisk: true,
     }),
     new HtmlWebpackHarddiskPlugin(),
+    new FaviconsWebpackPlugin({
+      logo: path.join(__dirname, 'src/images/favicon.png'),
+      emitStats: false,
+      persistentCache: true,
+      inject: true,
+      background: '#fff',
+      title: 'AcceSE',
+      icons: {
+        android: true,
+        appleIcon: true,
+        appleStartup: true,
+        coast: true,
+        favicons: true,
+        firefox: true,
+        opengraph: true,
+        twitter: true,
+        yandex: false,
+        windows: true,
+      },
+    }),
+    new WebpackPwaManifest({
+      name: 'Accessible Search Engine',
+      short_name: 'AcceSE',
+      start_url: '.',
+      lang: 'en-US',
+      orientation: 'any',
+      display: 'standalone',
+      scope: '/',
+      description: 'Accessible Search Engine for People with Intellectual Disabilities',
+      background_color: '#e1f0ff',
+      theme_color: '#e1f0ff',
+      icons: [
+        {
+          src: path.join(__dirname, 'src/images/favicon.png'),
+          sizes: [96, 128, 192, 256, 384, 512]
+        },
+      ],
+    }),
     new ServiceWorkerWebpackPlugin({
       entry: path.join(__dirname, 'src/sw.js'),
     }),
