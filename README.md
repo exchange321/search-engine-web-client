@@ -8,7 +8,6 @@ Prototyping
 
 ## To-Dos
 - [x] Service Worker Initialization
-  - [x] Installation
   - [ ] Communication
 - [ ] Web Notification
   - [ ] Notification Trigger
@@ -20,6 +19,8 @@ Prototyping
 - [x] Wireframe
   - [x] Search Component
   - [x] Search Result Component
+- [ ] Service Worker Initialization
+  - [x] Installation
 - [ ] Web Notification
   - [x] Notification Invitation
 
