@@ -14,6 +14,7 @@ Prototyping
     - 092/100 - Best Practice
 
 ## To-Dos
+- [x] Preparing for Production
 
 ## Completed
 - [x] Development Environment Setup
