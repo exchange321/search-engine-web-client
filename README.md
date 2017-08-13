@@ -14,8 +14,6 @@ Prototyping
     - 092/100 - Best Practice
 
 ## To-Dos
-- [x] Simulating Interactive Components
-  - [x] Linking Search Result Event with Web Notification Trigger
 
 ## Completed
 - [x] Development Environment Setup
@@ -28,4 +26,6 @@ Prototyping
 - [x] Web Notification
   - [x] Notification Invitation
   - [x] Notification Trigger
+- [x] Simulating Interactive Components
+  - [x] Linking Search Result Event with Web Notification Trigger
 
