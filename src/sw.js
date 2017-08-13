@@ -1,4 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 const { assets } = global.serviceWorkerOption;
+const { getSearchResults } = require('./api/search');
 
 const CACHE_NAME = new Date().toISOString();
 
@@ -10,6 +12,7 @@ let query = '';
 let visited = [];
 let whitelist = [];
 let blacklist = [];
+let current;
 
 const pushNotification = () => {
   setTimeout(() => {
@@ -22,6 +25,9 @@ const pushNotification = () => {
       icon: '/images/favicon/icon_96x96.png',
       renotify: true,
       requireInteraction: true,
+      data: {
+        renotify: true,
+      },
       actions: [
         {
           action: 'more',
@@ -39,6 +45,71 @@ const pushNotification = () => {
     });
   }, delay);
 };
+
+const addToWhitelist = (categories) => {
+  categories.forEach((category) => {
+    if (!blacklist.includes(category)) {
+      if (!whitelist.includes(category)) {
+        whitelist.push(category);
+      }
+    } else {
+      const index = blacklist.indexOf(category);
+      if (index > -1) {
+        blacklist.splice(index, 1);
+      }
+    }
+  });
+};
+
+const addToBlacklist = (categories) => {
+  categories.forEach((category) => {
+    if (!whitelist.includes(category)) {
+      if (!blacklist.includes(category)) {
+        blacklist.push(category);
+      }
+    } else {
+      const index = whitelist.indexOf(category);
+      if (index > -1) {
+        whitelist.splice(index, 1);
+      }
+    }
+  });
+};
+
+const openWebsite = url => clients.openWindow(url);
+
+const handleNotificationActions = (coin) => new Promise((resolve) => {
+  const { categories } = current;
+  if (coin) {
+    addToWhitelist(categories);
+  } else {
+    addToBlacklist(categories);
+  }
+  getSearchResults(query, whitelist, blacklist, visited).then((results) => {
+    if (results.length > 0) {
+      current = results[0]._source;
+      pushNotification();
+      resolve(current.url);
+    } else {
+      self.registration.showNotification('ASE Search', {
+        dir: 'ltr',
+        lang: 'en-US',
+        body: 'We have run out of records! Please try another query! (Click me to dismiss)',
+        tag: 'ASE',
+        badge: '/images/favicon/icon_96x96.png',
+        icon: '/images/favicon/icon_96x96.png',
+        data: {
+          renotify: false,
+        },
+        renotify: true,
+        requireInteraction: false,
+        silent: false,
+        vibrate: [200, 100, 200],
+      });
+      resolve(null);
+    }
+  });
+});
 
 assetsToCache = assetsToCache.map(path => new URL(path, global.location).toString());
 
@@ -79,6 +150,7 @@ self.addEventListener('message', (e) => {
       visited = [result.url];
       whitelist = [];
       blacklist = [];
+      current = result;
       pushNotification();
       break;
     }
@@ -90,20 +162,31 @@ self.addEventListener('message', (e) => {
 
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
-  switch (e.action) {
-    case 'more' : {
-      console.log('More!!!');
-      break;
+  e.waitUntil(new Promise((resolve, reject) => {
+    switch (e.action) {
+      case 'more' : {
+        handleNotificationActions(true).then(resolve);
+        break;
+      }
+      case 'no': {
+        handleNotificationActions(false).then(resolve);
+        break;
+      }
+      default: {
+        if (e.notification.data.renotify) {
+          pushNotification();
+          reject();
+        }
+        break;
+      }
     }
-    case 'no': {
-      console.log('Nope...');
-      break;
+  }).then((url) => {
+    if (url) {
+      visited.push(url);
+      return openWebsite(url);
     }
-    default: {
-      pushNotification();
-      break;
-    }
-  }
+    return openWebsite(`${e.srcElement.origin}/?query=${query}`);
+  }).catch());
 });
 
 self.addEventListener('fetch', (e) => {

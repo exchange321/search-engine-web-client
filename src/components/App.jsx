@@ -140,9 +140,8 @@ class App extends Component {
       this.setState({ loadingResults: false })
     ));
   };
-  handleResultClick = (e, query, result) => {
+  handleResultClick = (query, result) => {
     if (this.props.searchResults.sw) {
-      e.preventDefault();
       navigator.serviceWorker.controller.postMessage({
         action: 'root',
         info: {
@@ -194,7 +193,7 @@ class App extends Component {
                     <SearchResults
                       sw={sw}
                       results={results}
-                      handleResultClick={(e, result) => this.handleResultClick(e, query, result)}
+                      handleResultClick={result => this.handleResultClick(query, result)}
                     />
                   ) : null
                 }

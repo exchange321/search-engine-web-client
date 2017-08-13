@@ -1,6 +1,6 @@
 
-export const delay = 200;
+export const delay = 10;
 
-export const deepDelay = 3000;
+export const deepDelay = 10;
 
 export default delay;

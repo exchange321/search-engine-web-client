@@ -42,7 +42,7 @@ const SearchResult = ({ result, onResultClick }) => {
             href={url}
             className="h5 result-title"
             title={title}
-            onClick={e => onResultClick(e, result)}
+            onClick={() => onResultClick(result)}
           >
             {
               title.length > titleCount ? `${title.slice(0, title.lastIndexOfRegex(/\W+/, titleCount - 2))} ...` : title
@@ -70,7 +70,11 @@ SearchResult.propTypes = {
     image: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }).isRequired,
-  onResultClick: PropTypes.func.isRequired,
+  onResultClick: PropTypes.func,
+};
+
+SearchResult.defaultProps = {
+  onResultClick: () => {},
 };
 
 export default SearchResult;

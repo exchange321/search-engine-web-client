@@ -18,11 +18,26 @@ export const getCompletions = query => (
   })
 );
 
-export const getSearchResults = query => (
+// eslint-disable-next-line no-unused-vars
+export const getSearchResults = (query, whitelist = [], blacklist = [], visited = []) => (
   new Promise((resolve) => {
     setTimeout(() => {
+      const filteredResults = results.filter((result) => {
+        if (visited.includes(result._source.url)) {
+          return false;
+        }
+        for (let i = 0; i < result._source.categories.length; i += 1) {
+          if (blacklist.includes(result._source.categories[i])) {
+            return false;
+          }
+          if (whitelist.includes(result._source.categories[i])) {
+            return true;
+          }
+        }
+        return whitelist.length <= 0;
+      });
       if (query.length > 0) {
-        resolve(results.sort((a, b) => b._score - a._score));
+        resolve(filteredResults.sort((a, b) => b._score - a._score));
       }
       resolve([]);
     }, deepDelay);
