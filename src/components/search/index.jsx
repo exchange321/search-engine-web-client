@@ -32,10 +32,10 @@ const Search = ({ query, suggestions, onQueryChange, onFormSubmit }) => {
               }}
               items={suggestions}
               renderItem={(item, isHighlighted) => (
-                <div className={`suggestion ${isHighlighted ? 'highlighted' : ''}`}>{item.label}</div>
+                <div role="option" aria-selected={isHighlighted ? 'true' : 'false'} className={`suggestion ${isHighlighted ? 'highlighted' : ''}`}>{item.label}</div>
               )}
               renderMenu={items => (
-                <div className="suggestions-menu">
+                <div className="suggestions-menu" role="listbox">
                   {items.map(item => ({
                     ...item,
                     key: suggestions.filter(suggestion => (
