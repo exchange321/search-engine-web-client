@@ -14,20 +14,18 @@ Prototyping
     - 092/100 - Best Practice
 
 ## To-Dos
-- [x] Service Worker Initialization
-  - [ ] Communication
-- [ ] Web Notification
-  - [ ] Notification Trigger
-- [ ] Simulating Interactive Components
-  - [ ] Linking Search Result Event with Web Notification Trigger
+- [x] Simulating Interactive Components
+  - [x] Linking Search Result Event with Web Notification Trigger
 
 ## Completed
 - [x] Development Environment Setup
 - [x] Wireframe
   - [x] Search Component
   - [x] Search Result Component
-- [ ] Service Worker Initialization
+- [x] Service Worker Initialization
   - [x] Installation
-- [ ] Web Notification
+  - [x] Communication
+- [x] Web Notification
   - [x] Notification Invitation
+  - [x] Notification Trigger
 
