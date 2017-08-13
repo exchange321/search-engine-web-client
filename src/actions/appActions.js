@@ -49,4 +49,8 @@ export const enableServiceWorker = () => ({
   type: APP_ACTIONS.ENABLE_SERVICE_WORKER,
 });
 
+export const disableServiceWorker = () => ({
+  type: APP_ACTIONS.DISABLE_SERVICE_WORKER,
+});
+
 export default () => {};

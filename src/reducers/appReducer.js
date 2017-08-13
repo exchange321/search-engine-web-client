@@ -48,6 +48,15 @@ const appReducer = (state = initialState.app, action) => {
         },
       };
     }
+    case APP_ACTIONS.DISABLE_SERVICE_WORKER: {
+      return {
+        ...state,
+        searchResults: {
+          ...state.searchResults,
+          sw: false,
+        },
+      };
+    }
     default: {
       return state;
     }

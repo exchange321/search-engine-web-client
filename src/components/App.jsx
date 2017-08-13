@@ -6,6 +6,9 @@ import PropTypes from 'prop-types';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import runtime from 'serviceworker-webpack-plugin/lib/runtime';
+import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEvents';
+import applyUpdate from 'serviceworker-webpack-plugin/lib/browser/applyUpdate';
 
 import loader from '../images/gif-loader.gif';
 
@@ -51,6 +54,7 @@ class App extends Component {
       handleQuerySubmit: PropTypes.func.isRequired,
       triggerSearchState: PropTypes.func.isRequired,
       enableServiceWorker: PropTypes.func.isRequired,
+      disableServiceWorker: PropTypes.func.isRequired,
     }).isRequired,
   };
   state = {
@@ -70,7 +74,24 @@ class App extends Component {
     }
   }
   registerServiceWorker = () => {
-    this.props.actions.enableServiceWorker();
+    const registration = runtime.register();
+    registerEvents(registration, {
+      onInstalled: () => {
+        this.props.actions.enableServiceWorker();
+      },
+      onUpdateReady: () => {
+        this.props.actions.disableServiceWorker();
+        applyUpdate().then(() => {
+          window.location.reload();
+        });
+      },
+      onUpdateFailed: () => {
+        this.props.actions.disableServiceWorker();
+      },
+      onUpdated: () => {
+        this.props.actions.enableServiceWorker();
+      },
+    });
   };
   handleQueryChange = (query) => {
     this.props.actions.handleQueryChange(query);
