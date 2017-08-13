@@ -6,7 +6,7 @@ const CACHE_NAME = new Date().toISOString();
 
 let assetsToCache = [...assets, './'];
 
-const delay = 100;
+const delay = 5000;
 
 let query = '';
 let visited = [];
