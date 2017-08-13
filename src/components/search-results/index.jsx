@@ -8,8 +8,12 @@ import PropTypes from 'prop-types';
 import SWSearchResults from './SW/index.jsx';
 import NSWSearchResults from './NSW/index.jsx';
 
-const SearchResults = ({ sw, results }) => (
-  sw ? <SWSearchResults result={results[0]._source} /> : <NSWSearchResults results={results} />
+const SearchResults = ({ sw, results, handleResultClick }) => (
+  sw ? (
+    <SWSearchResults result={results[0]._source} handleResultClick={handleResultClick} />
+  ) : (
+    <NSWSearchResults results={results} />
+  )
 );
 
 SearchResults.propTypes = {
@@ -25,6 +29,7 @@ SearchResults.propTypes = {
       categories: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     }).isRequired,
   })).isRequired,
+  handleResultClick: PropTypes.func.isRequired,
 };
 
 export default SearchResults;

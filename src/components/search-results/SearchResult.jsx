@@ -11,7 +11,8 @@ String.prototype.lastIndexOfRegex = function (regex, fromIndex) {
   return match ? str.lastIndexOf(match[match.length - 1]) : -1;
 };
 
-const SearchResult = ({ result: { title, description, image, url } }) => {
+const SearchResult = ({ result, onResultClick }) => {
+  const { title, description, image, url } = result;
   const width = document.body.offsetWidth;
   let titleCount = 0;
   let descCount = 0;
@@ -37,7 +38,16 @@ const SearchResult = ({ result: { title, description, image, url } }) => {
       </div>
       <div className="text-container">
         <div className="result-title-container">
-          <a href={url} className="h5 result-title" title={title}>{title.length > titleCount ? `${title.slice(0, title.lastIndexOfRegex(/\W+/, titleCount - 2))} ...` : title}</a>
+          <a
+            href={url}
+            className="h5 result-title"
+            title={title}
+            onClick={e => onResultClick(e, result)}
+          >
+            {
+              title.length > titleCount ? `${title.slice(0, title.lastIndexOfRegex(/\W+/, titleCount - 2))} ...` : title
+            }
+          </a>
         </div>
         <cite className="result-url" title={url}>
           {
@@ -60,6 +70,7 @@ SearchResult.propTypes = {
     image: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }).isRequired,
+  onResultClick: PropTypes.func.isRequired,
 };
 
 export default SearchResult;

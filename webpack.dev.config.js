@@ -75,6 +75,7 @@ module.exports = {
     new HtmlWebpackHarddiskPlugin(),
     new FaviconsWebpackPlugin({
       logo: path.join(__dirname, 'src/images/favicon.png'),
+      prefix: 'images/favicon/',
       emitStats: false,
       persistentCache: true,
       inject: true,
@@ -94,6 +95,7 @@ module.exports = {
       },
     }),
     new WebpackPwaManifest({
+      fingerprints: false,
       name: 'Accessible Search Engine',
       short_name: 'AcceSE',
       start_url: '.',
@@ -107,7 +109,8 @@ module.exports = {
       icons: [
         {
           src: path.join(__dirname, 'src/images/favicon.png'),
-          sizes: [96, 128, 192, 256, 384, 512]
+          sizes: [96, 128, 192, 256, 384, 512],
+          destination: path.join('images', 'favicon'),
         },
       ],
     }),

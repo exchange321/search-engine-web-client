@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 
 import SearchResult from '../SearchResult.jsx';
 
-const SWSearchResults = ({ result }) => (
+const SWSearchResults = ({ result, handleResultClick }) => (
   <div className="search-results">
-    <SearchResult result={result} />
+    <SearchResult result={result} onResultClick={handleResultClick} />
   </div>
 );
 
@@ -19,6 +19,7 @@ SWSearchResults.propTypes = {
     image: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }).isRequired,
+  handleResultClick: PropTypes.func.isRequired,
 };
 
 export default SWSearchResults;

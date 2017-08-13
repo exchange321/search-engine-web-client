@@ -73,7 +73,7 @@ class App extends Component {
     if ('serviceWorker' in navigator && 'Notification' in window) {
       if (Notification.permission === 'granted') {
         this.registerServiceWorker();
-      } else {
+      } else if (Notification.permission !== 'denied') {
         Notification.requestPermission((permission) => {
           if (permission === 'granted') {
             this.registerServiceWorker();
@@ -84,6 +84,7 @@ class App extends Component {
     if (this.props.location && this.props.location.search) {
       const { query } = QueryString.parse(this.props.location.search);
       if (query) {
+        this.props.actions.handleQueryChange(query);
         this.handleSearching(query, false);
       }
     }
@@ -139,6 +140,18 @@ class App extends Component {
       this.setState({ loadingResults: false })
     ));
   };
+  handleResultClick = (e, query, result) => {
+    if (this.props.searchResults.sw) {
+      e.preventDefault();
+      navigator.serviceWorker.controller.postMessage({
+        action: 'root',
+        info: {
+          query,
+          result,
+        },
+      });
+    }
+  };
 
   render() {
     const {
@@ -178,7 +191,11 @@ class App extends Component {
               <div className={`search-results-container container ${triggered ? 'full' : ''}`}>
                 {
                   triggered ? (
-                    <SearchResults sw={sw} results={results} />
+                    <SearchResults
+                      sw={sw}
+                      results={results}
+                      handleResultClick={(e, result) => this.handleResultClick(e, query, result)}
+                    />
                   ) : null
                 }
               </div>
