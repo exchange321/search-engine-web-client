@@ -2,7 +2,8 @@
     "parser": "babel-eslint",
     "extends": "airbnb",
     "env": {
-        "browser": true
+        "browser": true,
+        "serviceworker": true
     },
     "rules": {
         "import/extensions": [1, "never", { "jsx": "always" }]

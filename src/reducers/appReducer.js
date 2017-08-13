@@ -30,6 +30,24 @@ const appReducer = (state = initialState.app, action) => {
         },
       };
     }
+    case APP_ACTIONS.UPDATE_SEARCH_RESULTS: {
+      return {
+        ...state,
+        searchResults: {
+          ...state.searchResults,
+          results: action.results,
+        },
+      };
+    }
+    case APP_ACTIONS.ENABLE_SERVICE_WORKER: {
+      return {
+        ...state,
+        searchResults: {
+          ...state.searchResults,
+          sw: true,
+        },
+      };
+    }
     default: {
       return state;
     }

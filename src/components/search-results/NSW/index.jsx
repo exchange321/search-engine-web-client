@@ -1,19 +1,23 @@
-/* eslint-disable no-underscore-dangle */
 /**
- * Created by Wayuki on 12-Aug-17.
+ * Created by Wayuki on 13-Aug-17.
  */
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SWSearchResults from './SW/index.jsx';
-import NSWSearchResults from './NSW/index.jsx';
+import SearchResult from '../SearchResult.jsx';
 
-const SearchResults = ({ sw, results }) => (
-  sw ? <SWSearchResults result={results[0]._source} /> : <NSWSearchResults results={results} />
+const NSWSearchResults = ({ results }) => (
+  <div className="search-results">
+    {
+      results.map(result => (
+        <SearchResult key={result._id} result={result._source} />
+      ))
+    }
+  </div>
 );
 
-SearchResults.propTypes = {
-  sw: PropTypes.bool.isRequired,
+NSWSearchResults.propTypes = {
   results: PropTypes.arrayOf(PropTypes.shape({
     _score: PropTypes.number.isRequired,
     _id: PropTypes.string.isRequired,
@@ -27,4 +31,4 @@ SearchResults.propTypes = {
   })).isRequired,
 };
 
-export default SearchResults;
+export default NSWSearchResults;

@@ -34,6 +34,7 @@
     "redux": "^3.7.2",
     "redux-promise-middleware": "4.2.1",
     "redux-thunk": "^2.2.0",
+    "serviceworker-webpack-plugin": "^0.2.3",
     "tether": "^1.4.0",
     "toastr": "^2.1.2"
   },
