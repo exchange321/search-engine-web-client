@@ -21,8 +21,8 @@ const pushNotification = () => {
       lang: 'en-US',
       body: 'Are you satisfied with the content? (Click me to snooze)',
       tag: 'ASE',
-      badge: '/images/favicon/icon_96x96.png',
-      icon: '/images/favicon/icon_96x96.png',
+      badge: '/assets/favicon/icon_96x96.png',
+      icon: '/assets/favicon/icon_96x96.png',
       renotify: true,
       requireInteraction: true,
       data: {
@@ -78,7 +78,7 @@ const addToBlacklist = (categories) => {
 
 const openWebsite = url => clients.openWindow(url);
 
-const handleNotificationActions = (coin) => new Promise((resolve) => {
+const handleNotificationActions = coin => new Promise((resolve) => {
   const { categories } = current;
   if (coin) {
     addToWhitelist(categories);
@@ -96,8 +96,8 @@ const handleNotificationActions = (coin) => new Promise((resolve) => {
         lang: 'en-US',
         body: 'We have run out of records! Please try another query! (Click me to dismiss)',
         tag: 'ASE',
-        badge: '/images/favicon/icon_96x96.png',
-        icon: '/images/favicon/icon_96x96.png',
+        badge: '/assets/favicon/icon_96x96.png',
+        icon: '/assets/favicon/icon_96x96.png',
         data: {
           renotify: false,
         },
