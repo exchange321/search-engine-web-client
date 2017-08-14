@@ -8,13 +8,12 @@ Prototyping
 
 ## Score
 - Lighthouse
-    - 082/100 - Progressive Web App
-    - 001/100 - Performance *(Without Production Optimization)*
+    - 091/100 - Progressive Web App
+    - 062/100 - Performance
     - 097/100 - Accessibility
     - 092/100 - Best Practice
 
 ## To-Dos
-- [x] Preparing for Production
 
 ## Completed
 - [x] Development Environment Setup
@@ -29,4 +28,5 @@ Prototyping
   - [x] Notification Trigger
 - [x] Simulating Interactive Components
   - [x] Linking Search Result Event with Web Notification Trigger
+- [x] Preparing for Production
 
