@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import Promise from 'promise-polyfill';
 
 import 'babel-polyfill';
@@ -15,8 +14,6 @@ import AppEntry from './AppEntry.jsx';
 window.jQuery = window.$ = require('jquery');
 window.Tether = require('tether');
 require('bootstrap');
-
-injectTapEventPlugin();
 
 if (!window.Promise) {
   window.Promise = Promise;

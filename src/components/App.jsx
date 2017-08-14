@@ -3,7 +3,6 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { routerActions } from 'react-router-redux';
@@ -166,42 +165,40 @@ class App extends Component {
     } = this.props;
     const { loadingResults } = this.state;
     return (
-      <MuiThemeProvider>
-        <div className="app-container">
-          <div className={`search-container container ${!triggered ? 'full' : ''}`}>
-            <Search
-              query={query}
-              suggestions={suggestions}
-              onQueryChange={this.handleQueryChange}
-              onFormSubmit={this.handleSearchFormSubmit}
-            />
-          </div>
-          {
-            loadingResults ? (
-              <div className="loading-results-container container">
-                <div className="img-container">
-                  <img src={loader} alt="Loading..." />
-                </div>
-                <div className="text-container">
-                  <p className="lead">Loading Results...</p>
-                </div>
-              </div>
-            ) : (
-              <div className={`search-results-container container ${triggered ? 'full' : ''}`}>
-                {
-                  triggered ? (
-                    <SearchResults
-                      sw={sw}
-                      results={results}
-                      handleResultClick={result => this.handleResultClick(query, result)}
-                    />
-                  ) : null
-                }
-              </div>
-            )
-          }
+      <div className="app-container">
+        <div className={`search-container container ${!triggered ? 'full' : ''}`}>
+          <Search
+            query={query}
+            suggestions={suggestions}
+            onQueryChange={this.handleQueryChange}
+            onFormSubmit={this.handleSearchFormSubmit}
+          />
         </div>
-      </MuiThemeProvider>
+        {
+          loadingResults ? (
+            <div className="loading-results-container container">
+              <div className="img-container">
+                <img src={loader} alt="Loading..." />
+              </div>
+              <div className="text-container">
+                <p className="lead">Loading Results...</p>
+              </div>
+            </div>
+          ) : (
+            <div className={`search-results-container container ${triggered ? 'full' : ''}`}>
+              {
+                triggered ? (
+                  <SearchResults
+                    sw={sw}
+                    results={results}
+                    handleResultClick={result => this.handleResultClick(query, result)}
+                  />
+                ) : null
+              }
+            </div>
+          )
+        }
+      </div>
     );
   }
 }

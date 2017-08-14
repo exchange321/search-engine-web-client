@@ -1,6 +1,6 @@
 const path = require('path');
 const colors = require('colors/safe');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const NyanProgressPlugin = require('nyan-progress-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
@@ -87,9 +87,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new ProgressBarPlugin({
-      format: `  build [${colors.blue.bold(':bar')}] ${colors.green.bold(':percent')} (:elapsed seconds) - :msg`,
-    }),
+    new NyanProgressPlugin(),
     new HtmlWebpackPlugin({
       template: `${__dirname}/src/index.html`,
       alwaysWriteToDisk: true,
