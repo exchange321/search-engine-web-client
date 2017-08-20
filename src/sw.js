@@ -10,17 +10,17 @@ const delay = 5000;
 
 let query = '';
 let visited = [];
-let whitelist = [];
-let blacklist = [];
+let whitelist = {};
+let blacklist = {};
 let current;
 
 const pushNotification = () => {
   setTimeout(() => {
-    self.registration.showNotification('ASE Search', {
+    self.registration.showNotification('AcceSE Search', {
       dir: 'ltr',
       lang: 'en-US',
-      body: 'Are you satisfied with the content? (Click me to snooze)',
-      tag: 'ASE',
+      body: 'Keep reading this page',
+      tag: 'AcceSE',
       badge: '/assets/favicon/icon_96x96.png',
       icon: '/assets/favicon/icon_96x96.png',
       renotify: true,
@@ -31,12 +31,12 @@ const pushNotification = () => {
       actions: [
         {
           action: 'more',
-          title: 'Yes! But I need more!',
+          title: 'I liked it, show me another one',
           icon: 'https://cdn.shopify.com/s/files/1/1061/1924/products/Heart_Eyes_Emoji_large.png?v=1480481053',
         },
         {
           action: 'no',
-          title: 'No... I need others...',
+          title: 'I want a better one',
           icon: 'http://icons.iconarchive.com/icons/designbolts/emoji/512/Emoji-Consoling-icon.png',
         },
       ],
@@ -48,31 +48,29 @@ const pushNotification = () => {
 
 const addToWhitelist = (categories) => {
   categories.forEach((category) => {
-    if (!blacklist.includes(category)) {
-      if (!whitelist.includes(category)) {
-        whitelist.push(category);
-      }
-    } else {
-      const index = blacklist.indexOf(category);
-      if (index > -1) {
-        blacklist.splice(index, 1);
-      }
-    }
+    whitelist = {
+      ...whitelist,
+      [category]: whitelist[category] ? whitelist[category] + 1 : 1,
+    };
+    blacklist = {
+      ...blacklist,
+      [category]: blacklist[category] && blacklist[category] > 0 ?
+        blacklist[category] - 1 : blacklist[category],
+    };
   });
 };
 
 const addToBlacklist = (categories) => {
   categories.forEach((category) => {
-    if (!whitelist.includes(category)) {
-      if (!blacklist.includes(category)) {
-        blacklist.push(category);
-      }
-    } else {
-      const index = whitelist.indexOf(category);
-      if (index > -1) {
-        whitelist.splice(index, 1);
-      }
-    }
+    blacklist = {
+      ...blacklist,
+      [category]: blacklist[category] ? blacklist[category] + 1 : 1,
+    };
+    whitelist = {
+      ...whitelist,
+      [category]: whitelist[category] && whitelist[category] > 0 ?
+        whitelist[category] - 1 : whitelist[category],
+    };
   });
 };
 
@@ -183,6 +181,7 @@ self.addEventListener('notificationclick', (e) => {
   }).then((url) => {
     if (url) {
       visited.push(url);
+      console.log(url);
       return openWebsite(url);
     }
     return openWebsite(`${e.srcElement.origin}/?query=${query}`);

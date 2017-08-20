@@ -19,22 +19,23 @@ export const getCompletions = query => (
 );
 
 // eslint-disable-next-line no-unused-vars
-export const getSearchResults = (query, whitelist = [], blacklist = [], visited = []) => (
+export const getSearchResults = (query, whitelist = {}, blacklist = {}, visited = []) => (
   new Promise((resolve) => {
     setTimeout(() => {
-      const filteredResults = results.filter((result) => {
-        if (visited.includes(result._source.url)) {
-          return false;
-        }
-        for (let i = 0; i < result._source.categories.length; i += 1) {
-          if (blacklist.includes(result._source.categories[i])) {
-            return false;
+      const filteredResults = [];
+      results.forEach((result) => {
+        if (!visited.includes(result._source.url)) {
+          const temp = { ...result };
+          for (let i = 0; i < temp._source.categories.length; i += 1) {
+            if (whitelist[temp._source.categories[i]]) {
+              temp._score *= 1.10 ** Math.sqrt(whitelist[temp._source.categories[i]]);
+            }
+            if (blacklist[temp._source.categories[i]]) {
+              temp._score *= 0.90 ** Math.sqrt(blacklist[temp._source.categories[i]]);
+            }
           }
-          if (whitelist.includes(result._source.categories[i])) {
-            return true;
-          }
+          filteredResults.push(temp);
         }
-        return whitelist.length <= 0;
       });
       if (query.length > 0) {
         resolve(filteredResults.sort((a, b) => b._score - a._score));
