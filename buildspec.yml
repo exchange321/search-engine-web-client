@@ -16,7 +16,7 @@ phases:
       - 'apt-get update'
       - 'apt-get install docker-ce=17.06.0~ce-0~ubuntu'
       - 'docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)'
-  pre-build:
+  pre_build:
     commands:
       - 'npm install -g yarn'
       - 'yarn install'
@@ -24,7 +24,7 @@ phases:
   build:
     commands:
       - 'yarn run build'
-  post-build:
+  post_build:
     commands:
       - 'docker build -t exchange321/accese-web-client:latest -f .docker/Dockerfile .'
       - 'docker push exchange321/accese-web-client:latest'
