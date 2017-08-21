@@ -13,8 +13,7 @@ phases:
       - 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'
       - 'apt-get update'
       - 'apt-get install -y docker-ce=17.06.0~ce-0~ubuntu'
-      - 'service docker restart'
-      - 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+      - 'sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
   pre_build:
     commands:
       - 'npm install -g yarn'
