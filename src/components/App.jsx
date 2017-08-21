@@ -69,7 +69,7 @@ class App extends Component {
     loadingResults: false,
   };
   componentWillMount() {
-    if ('serviceWorker' in navigator && 'Notification' in window) {
+    if ('serviceWorker' in navigator && 'Notification' in window && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
       if (Notification.permission === 'granted') {
         this.registerServiceWorker();
       } else if (Notification.permission !== 'denied') {
