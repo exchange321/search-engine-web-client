@@ -14,6 +14,7 @@ Prototyping
     - 092/100 - Best Practice
 
 ## To-Dos
+- [x] CI/CD Pipeline
 
 ## Completed
 - [x] Development Environment Setup
