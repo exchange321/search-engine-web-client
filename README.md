@@ -15,8 +15,7 @@ Prototyping
 
 ## To-Dos
 - [x] CI/CD Pipeline
-  - [x] AWS CodeBuild
-  - [ ] AWS CodeDeploy
+  - [x] AWS CodeDeploy
   - [ ] AWS CodePipeline
 
 ## Completed
@@ -33,4 +32,6 @@ Prototyping
 - [x] Simulating Interactive Components
   - [x] Linking Search Result Event with Web Notification Trigger
 - [x] Preparing for Production
+- [x] CI/CD Pipeline
+  - [x] AWS CodeBuild
 
