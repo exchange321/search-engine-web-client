@@ -22,3 +22,6 @@ phases:
     commands:
       - 'sudo docker build -t exchange321/accese-web-client:latest -f .docker/Dockerfile .'
       - 'sudo docker push exchange321/accese-web-client:latest'
+artifacts:
+  files:
+    - 'appspec.yml'
