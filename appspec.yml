@@ -2,4 +2,4 @@ version: 0.0
 os: linux
 hooks:
   ApplicationStart:
-    - location: /home/ubuntu/scripts/accese/web-client/deploy.sh
+    - location: deploy.sh
