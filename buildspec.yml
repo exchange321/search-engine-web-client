@@ -7,18 +7,18 @@ env:
 phases:
   install:
     commands:
-      - 'apt-get update'
+      - 'sudo apt-get update'
       - 'curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -'
-      - 'apt-get install -y nodejs'
-      - 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+      - 'sudo apt-get install -y nodejs'
+      - 'sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
   pre_build:
     commands:
-      - 'npm install'
-      - 'npm run test'
+      - 'sudo npm install'
+      - 'sudo npm run test'
   build:
     commands:
-      - 'yarn run build'
+      - 'sudo npm run build'
   post_build:
     commands:
-      - 'docker build -t exchange321/accese-web-client:latest -f .docker/Dockerfile .'
-      - 'docker push exchange321/accese-web-client:latest'
+      - 'sudo docker build -t exchange321/accese-web-client:latest -f .docker/Dockerfile .'
+      - 'sudo docker push exchange321/accese-web-client:latest'
