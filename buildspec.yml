@@ -13,9 +13,7 @@ phases:
       - 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
   pre_build:
     commands:
-      - 'npm install -g yarn'
-      - 'npm install request-progress'
-      - 'yarn install'
+      - 'npm install'
       - 'npm run test'
   build:
     commands:
