@@ -7,16 +7,16 @@
   "author": "Wayuki <adchuenhong@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "prestart": "babel-node tools/startMessage.js",
-    "start": "npm-run-all --parallel open:src",
-    "open:src": "babel-node tools/srcServer.js",
-    "test": "jest",
-    "test:watch": "jest --watchAll",
+    "prestart": "node_modules/.bin/babel-node tools/startMessage.js",
+    "start": "node_modules/.bin/npm-run-all --parallel open:src",
+    "open:src": "node_modules/.bin/babel-node tools/srcServer.js",
+    "test": "node_modules/.bin/jest",
+    "test:watch": "node_modules/.bin/node_modules/.bin/jest --watchAll",
     "clean-dist": "npm run remove-dist && mkdir dist",
-    "remove-dist": "rimraf ./dist",
-    "prebuild": "npm-run-all clean-dist test",
-    "build": "babel-node tools/build.js",
-    "dist:server": "babel-node tools/distServer.js"
+    "remove-dist": "node_modules/.bin/rimraf ./dist",
+    "prebuild": "node_modules/.bin/npm-run-all clean-dist test",
+    "build": "node_modules/.bin/babel-node tools/build.js",
+    "dist:server": "node_modules/.bin/babel-node tools/distServer.js"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
