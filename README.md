@@ -15,6 +15,9 @@ Prototyping
 
 ## To-Dos
 - [x] CI/CD Pipeline
+  - [x] AWS CodeBuild
+  - [ ] AWS CodeDeploy
+  - [ ] AWS CodePipeline
 
 ## Completed
 - [x] Development Environment Setup
