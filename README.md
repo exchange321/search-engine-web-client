@@ -14,9 +14,6 @@ Prototyping
     - 092/100 - Best Practice
 
 ## To-Dos
-- [x] CI/CD Pipeline
-  - [x] AWS CodeDeploy
-  - [ ] AWS CodePipeline
 
 ## Completed
 - [x] Development Environment Setup
@@ -34,4 +31,6 @@ Prototyping
 - [x] Preparing for Production
 - [x] CI/CD Pipeline
   - [x] AWS CodeBuild
+  - [x] AWS CodeDeploy
+  - [x] AWS CodePipeline
 
