@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 const { assets } = global.serviceWorkerOption;
 const { getSearchResults } = require('./api/search');
+const imgMore = require('./images/more.png');
+const imgNo = require('./images/no.png');
 
 const CACHE_NAME = new Date().toISOString();
 
@@ -32,12 +34,12 @@ const pushNotification = () => {
         {
           action: 'more',
           title: 'I liked it, show me another one',
-          icon: 'https://cdn.shopify.com/s/files/1/1061/1924/products/Heart_Eyes_Emoji_large.png?v=1480481053',
+          icon: imgMore,
         },
         {
           action: 'no',
           title: 'I want a better one',
-          icon: 'http://icons.iconarchive.com/icons/designbolts/emoji/512/Emoji-Consoling-icon.png',
+          icon: imgNo,
         },
       ],
       silent: false,
