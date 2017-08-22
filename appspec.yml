@@ -5,4 +5,4 @@ files:
     destination: /tmp
 hooks:
   ApplicationStart:
-    - location: /home/ubuntu/scripts/accese/web-client/deploy.sh
+    - location: deploy.sh
