@@ -8,10 +8,10 @@ Prototyping
 
 ## Score
 - Lighthouse
-    - 091/100 - Progressive Web App
-    - 062/100 - Performance
+    - 100/100 - Progressive Web App
+    - 070/100 - Performance
     - 097/100 - Accessibility
-    - 092/100 - Best Practice
+    - 100/100 - Best Practice
 
 ## To-Dos
 
