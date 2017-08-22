@@ -25,4 +25,3 @@ phases:
 artifacts:
   files:
     - 'appspec.yml'
-    - 'deploy.sh'
