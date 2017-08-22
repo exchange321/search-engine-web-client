@@ -57,7 +57,7 @@ const Search = ({ query, suggestions, onQueryChange, onFormSubmit }) => {
               ref={(btn) => { submitBtn = btn; }}
               title="Submit Search Query"
             >
-              <i className="fa fa-search" /> <span>Searches</span>
+              <i className="fa fa-search" /> <span>Search</span>
             </button>
           </div>
         </div>
