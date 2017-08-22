@@ -10,6 +10,4 @@ COPY ./dist /var/www/html
 
 EXPOSE 80
 
-ENTRYPOINT nginx
-
-CMD -g "daemon off;"
+CMD nginx -g "daemon off;"
