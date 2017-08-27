@@ -34,4 +34,5 @@ Prototyping
   - [x] AWS CodeDeploy
   - [x] AWS CodePipeline
 - [x] Add iFrame Mode
+- [x] Add Support for IE10/11 in CSS
 
