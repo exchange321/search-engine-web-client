@@ -99,10 +99,11 @@ export const results = [
     _score: 1,
     _id: '7',
     _source: {
-      title: 'Apple pie',
-      description: 'Plate up piping hot apple pie with delicious chunks of apples for a spectacular winter dessert.',
-      image: 'http://img.taste.com.au/kT40h-p7/w1200-h630-cfill/taste/2010/01/apple-pie_1980x1320-118401-1.jpg',
-      url: 'http://www.taste.com.au/recipes/apple-pie/0d52b417-4318-43b6-9974-79f0b0531b48',
+      title: 'Scrumptious Apple Pie Recipe',
+      description: 'This apple pie is a classic, from the scrumptious filling to the Double-Crust Pastry. It’s' +
+      ' homemade goodness at its very best.',
+      image: 'https://images-gmi-pmc.edge-generalmills.com/36452ba2-648c-4c67-90f7-3a1fc36cf6f4.jpg',
+      url: 'https://www.bettycrocker.com/recipes/scrumptious-apple-pie/c9a4acc6-85aa-4128-b0b0-1a17bdbe05e0',
       categories: [
         'Company',
         'Technology',
