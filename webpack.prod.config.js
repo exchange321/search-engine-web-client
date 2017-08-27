@@ -21,6 +21,7 @@ module.exports = {
         loader: ExtractTextPlugin.extract(
           [
             'css-loader',
+            'postcss-loader',
           ],
         ),
       },
@@ -29,6 +30,7 @@ module.exports = {
         loader: ExtractTextPlugin.extract(
           [
             'css-loader',
+            'postcss-loader',
             'sass-loader',
           ],
         ),

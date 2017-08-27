@@ -18,14 +18,16 @@ module.exports = {
         test: /\.css$/,
         loaders: [
           'style-loader',
-          'css-loader?sourceMap',
+          'css-loader?-autoprefixer',
+          'postcss-loader',
         ],
       },
       {
         test: /\.scss$/,
         loaders: [
           'style-loader',
-          'css-loader?sourceMap',
+          'css-loader?-autoprefixer',
+          'postcss-loader',
           'sass-loader',
         ],
       },
