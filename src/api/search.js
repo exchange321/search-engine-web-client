@@ -19,28 +19,37 @@ export const getCompletions = query => (
 );
 
 // eslint-disable-next-line no-unused-vars
-export const getSearchResults = (query, whitelist = {}, blacklist = {}, visited = []) => (
+export const getSearchResults = (query, visited = []) => (
   new Promise((resolve) => {
     setTimeout(() => {
-      const filteredResults = [];
-      results.forEach((result) => {
-        if (!visited.includes(result._source.url)) {
-          const temp = { ...result };
-          for (let i = 0; i < temp._source.categories.length; i += 1) {
-            if (whitelist[temp._source.categories[i]]) {
-              temp._score *= 1.10 ** Math.sqrt(whitelist[temp._source.categories[i]]);
-            }
-            if (blacklist[temp._source.categories[i]]) {
-              temp._score *= 0.90 ** Math.sqrt(blacklist[temp._source.categories[i]]);
-            }
-          }
-          filteredResults.push(temp);
+      resolve(results.sort((a, b) => b._score - a._score));
+    }, deepDelay);
+  })
+);
+
+export const getDocument = id => (
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      for (let i = 0; i < results.length; i += 1) {
+        if (results[i]._id === id) {
+          resolve({ ...results[i] });
         }
-      });
-      if (query.length > 0) {
-        resolve(filteredResults.sort((a, b) => b._score - a._score));
       }
-      resolve([]);
+      reject(new Error('No document found given the id.'));
+    }, deepDelay);
+  })
+);
+
+export const getNextDocument = (id, liked) => (
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      getDocument(id).then((doc) => {
+        if (liked) {
+          resolve(doc._source.branches[0]);
+        } else {
+          resolve(doc._source.branches[1]);
+        }
+      }).catch(reject);
     }, deepDelay);
   })
 );

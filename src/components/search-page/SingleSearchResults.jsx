@@ -1,24 +1,19 @@
 /**
  * Created by Wayuki on 13-Aug-17.
  */
-/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SearchResult from '../SearchResult.jsx';
+import SearchResult from './SearchResult.jsx';
 
-const NSWSearchResults = ({ results }) => (
+const SingleSearchResults = ({ result, handleResultClick }) => (
   <div className="search-results">
-    {
-      results.map(result => (
-        <SearchResult key={result._id} result={result._source} />
-      ))
-    }
+    <SearchResult result={result} onResultClick={handleResultClick} />
   </div>
 );
 
-NSWSearchResults.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.shape({
+SingleSearchResults.propTypes = {
+  result: PropTypes.shape({
     _score: PropTypes.number.isRequired,
     _id: PropTypes.string.isRequired,
     _source: PropTypes.shape({
@@ -26,9 +21,9 @@ NSWSearchResults.propTypes = {
       description: PropTypes.string.isRequired,
       image: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
-      categories: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     }).isRequired,
-  })).isRequired,
+  }).isRequired,
+  handleResultClick: PropTypes.func.isRequired,
 };
 
-export default NSWSearchResults;
+export default SingleSearchResults;

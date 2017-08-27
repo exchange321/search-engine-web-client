@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
+const QueryString = require('query-string');
+
 const { assets } = global.serviceWorkerOption;
-const { getSearchResults } = require('./api/search');
+const SearchAPI = require('./api/search');
 const imgMore = require('./images/more.png');
 const imgNo = require('./images/no.png');
 
@@ -12,8 +14,6 @@ const delay = 5000;
 
 let query = '';
 let visited = [];
-let whitelist = {};
-let blacklist = {};
 let current;
 
 const pushNotification = () => {
@@ -48,49 +48,17 @@ const pushNotification = () => {
   }, delay);
 };
 
-const addToWhitelist = (categories) => {
-  categories.forEach((category) => {
-    whitelist = {
-      ...whitelist,
-      [category]: whitelist[category] ? whitelist[category] + 1 : 1,
-    };
-    blacklist = {
-      ...blacklist,
-      [category]: blacklist[category] && blacklist[category] > 0 ?
-        blacklist[category] - 1 : blacklist[category],
-    };
-  });
-};
-
-const addToBlacklist = (categories) => {
-  categories.forEach((category) => {
-    blacklist = {
-      ...blacklist,
-      [category]: blacklist[category] ? blacklist[category] + 1 : 1,
-    };
-    whitelist = {
-      ...whitelist,
-      [category]: whitelist[category] && whitelist[category] > 0 ?
-        whitelist[category] - 1 : whitelist[category],
-    };
-  });
-};
-
 const openWebsite = url => clients.openWindow(url);
 
-const handleNotificationActions = coin => new Promise((resolve) => {
-  const { categories } = current;
-  if (coin) {
-    addToWhitelist(categories);
-  } else {
-    addToBlacklist(categories);
-  }
-  getSearchResults(query, whitelist, blacklist, visited).then((results) => {
-    if (results.length > 0) {
-      current = results[0]._source;
+const handleNotificationActions = like => new Promise((resolve) => {
+  SearchAPI.getNextDocument(current._id, like)
+    .then(id => SearchAPI.getDocument(id))
+    .then((doc) => {
+      current = doc;
       pushNotification();
-      resolve(current.url);
-    } else {
+      resolve(current._source.url);
+    })
+    .catch(() => {
       self.registration.showNotification('ASE Search', {
         dir: 'ltr',
         lang: 'en-US',
@@ -107,8 +75,7 @@ const handleNotificationActions = coin => new Promise((resolve) => {
         vibrate: [200, 100, 200],
       });
       resolve(null);
-    }
-  });
+    });
 });
 
 assetsToCache = assetsToCache.map(path => new URL(path, global.location).toString());
@@ -148,8 +115,6 @@ self.addEventListener('message', (e) => {
       const { query: q, result } = e.data.info;
       query = q;
       visited = [result.url];
-      whitelist = [];
-      blacklist = [];
       current = result;
       pushNotification();
       break;
@@ -183,10 +148,11 @@ self.addEventListener('notificationclick', (e) => {
   }).then((url) => {
     if (url) {
       visited.push(url);
-      console.log(url);
       return openWebsite(url);
     }
-    return openWebsite(`${e.srcElement.origin}/?query=${query}`);
+    return openWebsite(`${e.srcElement.origin}/search?${QueryString.stringify({
+      q: query,
+    })}`);
   }).catch());
 });
 

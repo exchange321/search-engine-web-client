@@ -30,31 +30,16 @@ const appReducer = (state = initialState.app, action) => {
         },
       };
     }
-    case APP_ACTIONS.UPDATE_SEARCH_RESULTS: {
+    case APP_ACTIONS.TOGGLE_RESULTS_DISPLAY_MODE: {
       return {
         ...state,
-        searchResults: {
-          ...state.searchResults,
-          results: action.results,
-        },
+        resDisMode: !state.resDisMode,
       };
     }
-    case APP_ACTIONS.ENABLE_SERVICE_WORKER: {
+    case APP_ACTIONS.TOGGLE_NAV_DISPLAY_MODE: {
       return {
         ...state,
-        searchResults: {
-          ...state.searchResults,
-          sw: true,
-        },
-      };
-    }
-    case APP_ACTIONS.DISABLE_SERVICE_WORKER: {
-      return {
-        ...state,
-        searchResults: {
-          ...state.searchResults,
-          sw: false,
-        },
+        navDisMode: !state.navDisMode,
       };
     }
     default: {

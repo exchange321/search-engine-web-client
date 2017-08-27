@@ -12,7 +12,7 @@ String.prototype.lastIndexOfRegex = function (regex, fromIndex) {
 };
 
 const SearchResult = ({ result, onResultClick }) => {
-  const { title, description, image, url } = result;
+  const { _source: { title, description, image, url } } = result;
   const width = document.body.offsetWidth;
   let titleCount = 0;
   let descCount = 0;
@@ -42,7 +42,7 @@ const SearchResult = ({ result, onResultClick }) => {
             href={url}
             className="h5 result-title"
             title={title}
-            onClick={() => onResultClick(result)}
+            onClick={e => onResultClick(e, result)}
           >
             {
               title.length > titleCount ? `${title.slice(0, title.lastIndexOfRegex(/\W+/, titleCount - 2))} ...` : title
@@ -65,16 +65,16 @@ const SearchResult = ({ result, onResultClick }) => {
 
 SearchResult.propTypes = {
   result: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
+    _score: PropTypes.number.isRequired,
+    _id: PropTypes.string.isRequired,
+    _source: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      image: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
-  onResultClick: PropTypes.func,
-};
-
-SearchResult.defaultProps = {
-  onResultClick: () => {},
+  onResultClick: PropTypes.func.isRequired,
 };
 
 export default SearchResult;

@@ -1,3 +1,4 @@
+import toastr from 'toastr';
 import { APP_ACTIONS } from './actionTypes';
 
 import * as SearchAPI from '../api/search';
@@ -23,34 +24,27 @@ export const triggerSearchState = () => ({
   type: APP_ACTIONS.TRIGGER_SEARCH_STATE,
 });
 
-const updateSearchResults = results => ({
-  type: APP_ACTIONS.UPDATE_SEARCH_RESULTS,
-  results,
-});
-
-export const handleQuerySubmit = (q = null) => (
-  (dispatch, getState) => new Promise((resolve) => {
-    let query = q;
-    if (query === null) {
-      query = getState().app.search.query;
+export const toggleResDisMode = () => (
+  (dispatch, getState) => {
+    if ('localStorage' in window) {
+      localStorage.setItem('resDisMode', (!getState().app.resDisMode).toString());
     }
-    if (query.length > 0) {
-      SearchAPI.getSearchResults(query)
-        .then((results) => {
-          dispatch(updateSearchResults(results));
-          resolve();
-        })
-        .catch();
-    }
-  })
+    dispatch({
+      type: APP_ACTIONS.TOGGLE_RESULTS_DISPLAY_MODE,
+    });
+    toastr.success('ResDisMode Switched!');
+  }
 );
 
-export const enableServiceWorker = () => ({
-  type: APP_ACTIONS.ENABLE_SERVICE_WORKER,
-});
-
-export const disableServiceWorker = () => ({
-  type: APP_ACTIONS.DISABLE_SERVICE_WORKER,
-});
+export const toggleNavDisMode = () => (
+  (dispatch, getState) => {
+    if ('localStorage' in window) {
+      localStorage.setItem('navDisMode', (!getState().app.navDisMode).toString());
+    }
+    dispatch({
+      type: APP_ACTIONS.TOGGLE_NAV_DISPLAY_MODE,
+    });
+    toastr.success('NavDisMode Switched!');
+  });
 
 export default () => {};

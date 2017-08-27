@@ -3,6 +3,7 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { routerActions } from 'react-router-redux';
@@ -10,17 +11,18 @@ import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEvents';
 import applyUpdate from 'serviceworker-webpack-plugin/lib/browser/applyUpdate';
 import QueryString from 'query-string';
-
-import loader from '../images/gif-loader.gif';
+import toastr from 'toastr';
 
 import * as appActions from '../actions/appActions';
 
-import Search from './search/index.jsx';
-import SearchResults from './search-results/index.jsx';
+import Search from './SearchBar.jsx';
+import SearchPage from './search-page/index.jsx';
+import ResultPage from './result-page/index.jsx';
 
 @connect(
-  ({ app }) => ({
+  ({ app, resultPage }) => ({
     ...app,
+    fullscreen: resultPage.fullscreen,
   }),
   dispatch => ({
     actions: bindActionCreators(appActions, dispatch),
@@ -29,9 +31,9 @@ import SearchResults from './search-results/index.jsx';
 )
 class App extends Component {
   static propTypes = {
-    location: PropTypes.shape({
-      search: PropTypes.string,
-    }).isRequired,
+    resDisMode: PropTypes.bool.isRequired,
+    navDisMode: PropTypes.bool.isRequired,
+    fullscreen: PropTypes.bool.isRequired,
     search: PropTypes.shape({
       query: PropTypes.string.isRequired,
       triggered: PropTypes.bool.isRequired,
@@ -40,75 +42,33 @@ class App extends Component {
         label: PropTypes.string.isRequired,
       })).isRequired,
     }).isRequired,
-    searchResults: PropTypes.shape({
-      sw: PropTypes.bool.isRequired,
-      results: PropTypes.arrayOf(PropTypes.shape({
-        _score: PropTypes.number.isRequired,
-        _id: PropTypes.string.isRequired,
-        _source: PropTypes.shape({
-          title: PropTypes.string.isRequired,
-          description: PropTypes.string.isRequired,
-          image: PropTypes.string.isRequired,
-          url: PropTypes.string.isRequired,
-          categories: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-        }).isRequired,
-      })).isRequired,
-    }).isRequired,
     actions: PropTypes.shape({
       handleQueryChange: PropTypes.func.isRequired,
-      handleQuerySubmit: PropTypes.func.isRequired,
       triggerSearchState: PropTypes.func.isRequired,
-      enableServiceWorker: PropTypes.func.isRequired,
-      disableServiceWorker: PropTypes.func.isRequired,
+      toggleResDisMode: PropTypes.func.isRequired,
+      toggleNavDisMode: PropTypes.func.isRequired,
     }).isRequired,
     routerActions: PropTypes.shape({
       push: PropTypes.func.isRequired,
     }).isRequired,
   };
-  state = {
-    loadingResults: false,
-  };
   componentWillMount() {
-    if ('serviceWorker' in navigator && 'Notification' in window && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
-      if (Notification.permission === 'granted') {
-        this.registerServiceWorker();
-      } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission((permission) => {
-          if (permission === 'granted') {
-            this.registerServiceWorker();
-          }
-        });
-      }
+    if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+      this.registerServiceWorker();
     }
-    if (this.props.location && this.props.location.search) {
-      const { query } = QueryString.parse(this.props.location.search);
-      if (query) {
-        this.props.actions.handleQueryChange(query);
-        this.handleSearching(query, false);
+    if ('Notification' in window) {
+      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        Notification.requestPermission();
       }
     }
   }
   registerServiceWorker = () => {
     const registration = runtime.register();
-    this.props.actions.enableServiceWorker();
     registerEvents(registration, {
-      onInstalled: () => {
-        this.props.actions.enableServiceWorker();
-      },
       onUpdateReady: () => {
-        this.props.actions.disableServiceWorker();
         applyUpdate().then(() => {
           window.location.reload();
         });
-      },
-      onUpdating: () => {
-        this.props.actions.disableServiceWorker();
-      },
-      onUpdateFailed: () => {
-        this.props.actions.disableServiceWorker();
-      },
-      onUpdated: () => {
-        this.props.actions.enableServiceWorker();
       },
     });
   };
@@ -123,81 +83,65 @@ class App extends Component {
       },
     } = this.props;
     if (query.length > 0) {
-      this.handleSearching(query);
+      this.handleSearch(query);
+      e.target.querySelector('input').blur();
+      e.target.blur();
     }
   };
-  handleSearching = (query, redirect = true) => {
-    this.props.actions.triggerSearchState();
-    this.setState({
-      loadingResults: true,
-    });
-    document.title = `${query} - AcceSE Search`;
-    if (redirect) {
-      this.props.routerActions.push(`/?${QueryString.stringify({ query })}`);
-    }
-    this.props.actions.handleQuerySubmit(query).then(() => (
-      this.setState({ loadingResults: false })
-    ));
+  handleSearch = (query) => {
+    this.props.routerActions.push(`/search?${QueryString.stringify({ q: query })}`);
   };
-  handleResultClick = (query, result) => {
-    if (this.props.searchResults.sw) {
-      navigator.serviceWorker.controller.postMessage({
-        action: 'root',
-        info: {
-          query,
-          result,
-        },
-      });
+  handleResultModeClick = () => {
+    this.props.actions.toggleResDisMode();
+  };
+  handleNavModeClick = () => {
+    if (this.props.navDisMode) {
+      if ('Notification' in window && 'serviceWorker' in navigator) {
+        if (Notification.permission === 'granted') {
+          this.props.actions.toggleNavDisMode();
+        } else if (Notification.permission !== 'denied') {
+          toastr.info('Please enable Web Notification.');
+          Notification.requestPermission(() => {
+            this.props.actions.toggleNavDisMode();
+          });
+        }
+      }
+    } else {
+      this.props.actions.toggleNavDisMode();
     }
   };
-
   render() {
     const {
+      resDisMode,
+      navDisMode,
       search: {
         query,
         triggered,
         suggestions,
       },
-      searchResults: {
-        sw,
-        results,
-      },
+      fullscreen,
     } = this.props;
-    const { loadingResults } = this.state;
     return (
       <div className="app-container">
+        <div className={`background ${fullscreen ? 'full-screen' : ''}`}>
+          <div className="snow" />
+        </div>
         <div className={`search-container container ${!triggered ? 'full' : ''}`}>
           <Search
+            resDisMode={resDisMode}
+            navDisMode={navDisMode}
             query={query}
             suggestions={suggestions}
             onQueryChange={this.handleQueryChange}
             onFormSubmit={this.handleSearchFormSubmit}
+            onResultModeClick={this.handleResultModeClick}
+            onNavModeClick={this.handleNavModeClick}
           />
         </div>
-        {
-          loadingResults ? (
-            <div className="loading-results-container container">
-              <div className="img-container">
-                <img src={loader} alt="Loading..." />
-              </div>
-              <div className="text-container">
-                <p className="lead">Loading Results...</p>
-              </div>
-            </div>
-          ) : (
-            <div className={`search-results-container container ${triggered ? 'full' : ''}`}>
-              {
-                triggered ? (
-                  <SearchResults
-                    sw={sw}
-                    results={results}
-                    handleResultClick={result => this.handleResultClick(query, result)}
-                  />
-                ) : null
-              }
-            </div>
-          )
-        }
+        <Switch>
+          <Route path="/search" component={SearchPage} />
+          <Route path="/result" component={ResultPage} />
+        </Switch>
       </div>
     );
   }
