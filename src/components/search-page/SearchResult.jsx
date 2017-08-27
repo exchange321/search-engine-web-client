@@ -32,8 +32,10 @@ const SearchResult = ({ result, onResultClick }) => {
   return (
     <div className="search-result">
       <div className="img-container">
-        <div className="img-res" style={{ backgroundImage: `url(${image})` }}>
-          <img src={image} className="hidden-xs-up" alt={title} />
+        <div className="img-res">
+          <div className="img-res-inner" style={{ backgroundImage: `url(${image})` }}>
+            <img src={image} className="hidden-xs-up" alt={title} />
+          </div>
         </div>
       </div>
       <div className="text-container">

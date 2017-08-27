@@ -286,7 +286,7 @@ div.app-container {
       & .img-container {
         flex: 1;
         display: flex;
-        align-items: center;
+        align-items: stretch;
         position: relative;
         margin-bottom: 1rem;
         @media #{$--md} {
@@ -303,10 +303,12 @@ div.app-container {
         & .img-res {
           flex: 1;
           position: relative;
-          padding-bottom: 56.25%;
-          background: transparent center center/cover no-repeat;
-          @media #{$--md} {
-            padding-bottom: 75%;
+          & .img-res-inner {
+            background: transparent center center/cover no-repeat;
+            padding-bottom: 56.25%;
+            @media #{$--md} {
+              padding-bottom: 75%;
+            }
           }
         }
       }
@@ -452,6 +454,7 @@ div.result-page-container {
           border: 0;
           position: absolute;
           opacity: 0;
+          background-color: white;
           @include --transition-all();
           &.iframe-show {
             opacity: 1;

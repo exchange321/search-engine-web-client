@@ -56,11 +56,6 @@ class App extends Component {
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
       this.registerServiceWorker();
     }
-    if ('Notification' in window) {
-      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-        Notification.requestPermission();
-      }
-    }
   }
   registerServiceWorker = () => {
     const registration = runtime.register();
@@ -103,6 +98,7 @@ class App extends Component {
           toastr.info('Please enable Web Notification.');
           Notification.requestPermission(() => {
             this.props.actions.toggleNavDisMode();
+            window.location.reload();
           });
         }
       }
