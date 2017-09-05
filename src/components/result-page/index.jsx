@@ -168,7 +168,7 @@ class ResultPage extends Component {
         handlePageLoadError={this.handlePageLoadError}
       />
       <Modal isOpen={this.state.dialog} toggle={this.togglePathDialog} className="next-result-modal">
-        <ModalHeader toggle={this.togglePathDialog}>Are you lost?</ModalHeader>
+        <ModalHeader toggle={this.togglePathDialog}>What&apos;s Next?</ModalHeader>
         <ModalBody>
           <div className="img-container">
             <img src={pathsImg} className="body-path-img" alt="choices" />

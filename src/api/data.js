@@ -51,11 +51,11 @@ export const results = [
     _score: 1,
     _id: '4',
     _source: {
-      title: 'Tablet - Light Android Tablets | Samsung Australia',
-      description: 'SAMSUNG | Discover the new Samsung Galaxy Tablets. Compare tablet & phablet prices & sizes' +
-      ' online today. Samsung Australia - accelerating discoveries and possibilities.',
-      image: 'http://images.samsung.com/is/image/samsung/au_SM-T110NDWAXSA_001_Front_white_thumb_10039498043099?wid=250&hei=250',
-      url: 'http://www.samsung.com/au/consumer/mobile-phone/tablet/',
+      title: 'Samsung Galaxy - Wikipedia',
+      description: 'Samsung Galaxy (stylised as SAMSUNG Galaxy, previously Samsung GALAXY) is a series of mobile' +
+      ' computing devices designed, manufactured and marketed by Samsung Electronics.',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/8/8e/Samsung_Galaxy_S8_and_S8_Plus.png',
+      url: 'https://en.wikipedia.org/wiki/Samsung_Galaxy',
       categories: [
         'Company',
         'Technology',
