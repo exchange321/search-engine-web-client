@@ -8,7 +8,9 @@ import SearchResult from './SearchResult.jsx';
 
 const SingleSearchResults = ({ result, handleResultClick }) => (
   <div className="search-results">
-    <SearchResult result={result} onResultClick={handleResultClick} />
+    <div className="results-container">
+      <SearchResult result={result} onResultClick={handleResultClick} />
+    </div>
   </div>
 );
 

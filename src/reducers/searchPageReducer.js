@@ -6,7 +6,14 @@ const searchPageReducer = (state = initialState.searchPage, action) => {
     case SEARCH_PAGE_ACTIONS.UPDATE_SEARCH_RESULTS: {
       return {
         ...state,
+        pages: action.pages,
         results: action.results,
+      };
+    }
+    case SEARCH_PAGE_ACTIONS.UPDATE_CURRENT_PAGE: {
+      return {
+        ...state,
+        currentPage: action.page,
       };
     }
     default: {

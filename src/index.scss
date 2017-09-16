@@ -262,96 +262,103 @@ div.app-container {
     padding-top: 7rem;
   }
   & .search-results {
-    display: flex;
-    flex-direction: column;
-    & .search-result {
-      flex: 1 0 auto;
+    & .results-container {
       display: flex;
       flex-direction: column;
-      padding: .5rem;
-      margin: .5rem;
-      border-radius: .5rem;
-      background: rgba(255, 255, 255, .8);
-      @include --transition-all();
-      @media #{$--md} {
-        flex-direction: row;
-      }
-      &:hover {
-        -webkit-transform: scale(1.03);
-        -moz-transform: scale(1.03);
-        -ms-transform: scale(1.03);
-        -o-transform: scale(1.03);
-        transform: scale(1.03);
-        -webkit-box-shadow: 0 0 3rem 0 rgba(255, 255, 255, 1);
-        -moz-box-shadow: 0 0 3rem 0 rgba(255, 255, 255, 1);
-        box-shadow: 0 0 3rem 0 rgba(255, 255, 255, 1);
-        background: rgba(255, 255, 255, 1);
-      }
-      & .img-container {
+      & .search-result {
         flex: 1 0 auto;
         display: flex;
-        align-items: stretch;
-        position: relative;
-        margin-bottom: 1rem;
+        flex-direction: column;
+        padding: .5rem;
+        margin: .5rem;
+        border-radius: .5rem;
+        background: rgba(255, 255, 255, .8);
+        @include --transition-all();
         @media #{$--md} {
-          flex: 0 0 25%;
-          margin-bottom: 0;
+          flex-direction: row;
         }
-        @media #{$--lg} {
-          flex: 0 0 20%;
+        &:hover {
+          -webkit-transform: scale(1.03);
+          -moz-transform: scale(1.03);
+          -ms-transform: scale(1.03);
+          -o-transform: scale(1.03);
+          transform: scale(1.03);
+          -webkit-box-shadow: 0 0 3rem 0 rgba(255, 255, 255, 1);
+          -moz-box-shadow: 0 0 3rem 0 rgba(255, 255, 255, 1);
+          box-shadow: 0 0 3rem 0 rgba(255, 255, 255, 1);
+          background: rgba(255, 255, 255, 1);
         }
-        @media #{$--xl} {
-          flex: 0 0 15%;
-        }
-        & .img-res {
+        & .img-container {
           flex: 1 0 auto;
+          display: flex;
+          align-items: stretch;
           position: relative;
-          & .img-res-inner {
-            background: transparent center center/cover no-repeat;
-            padding-bottom: 56.25%;
-            @media #{$--md} {
-              padding-bottom: 75%;
+          margin-bottom: 1rem;
+          @media #{$--md} {
+            flex: 0 0 25%;
+            margin-bottom: 0;
+          }
+          @media #{$--lg} {
+            flex: 0 0 20%;
+          }
+          @media #{$--xl} {
+            flex: 0 0 15%;
+          }
+          & .img-res {
+            flex: 1 0 auto;
+            position: relative;
+            & .img-res-inner {
+              background: transparent center center/cover no-repeat;
+              padding-bottom: 56.25%;
+              @media #{$--md} {
+                padding-bottom: 75%;
+              }
             }
           }
         }
-      }
-      & .text-container {
-        flex: 1 0 auto;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        @media #{$--md} {
-          padding-left: 1rem;
-          width: 75%;
-        }
-        @media #{$--lg} {
-          width: 80%;
-        }
-        @media #{$--xl} {
-          width: 85%;
-        }
-        & a.result-title {
-          color: #1a0dab;
-          &:visited {
-            color: #609;
-          }
+        & .text-container {
+          flex: 1 0 auto;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           @media #{$--md} {
-            margin: 0;
+            padding-left: 1rem;
+            width: 75%;
+          }
+          @media #{$--lg} {
+            width: 80%;
+          }
+          @media #{$--xl} {
+            width: 85%;
+          }
+          & a.result-title {
+            color: #1a0dab;
+            &:visited {
+              color: #609;
+            }
+            @media #{$--md} {
+              margin: 0;
+            }
+          }
+          & cite.result-url {
+            word-break: break-all;
+            font-style: normal;
+            color: #006621;
+            font-size: .8rem;
+          }
+          & p.result-description {
+            color: #545454;
+            margin-bottom: 0;
+            font-size: .8rem;
           }
         }
-        & cite.result-url {
-          word-break: break-all;
-          font-style: normal;
-          color: #006621;
-          font-size: .8rem;
-        }
-        & p.result-description {
-          color: #545454;
-          margin-bottom: 0;
-          font-size: .8rem;
-        }
       }
+    }
+    & .paginations-container {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #ccc;
     }
   }
 }

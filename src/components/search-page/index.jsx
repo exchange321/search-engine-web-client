@@ -43,6 +43,8 @@ class SearchPage extends Component {
     }).isRequired,
     resDisMode: PropTypes.bool.isRequired,
     navDisMode: PropTypes.bool.isRequired,
+    currentPage: PropTypes.number.isRequired,
+    pages: PropTypes.number.isRequired,
     results: PropTypes.arrayOf(PropTypes.shape({
       _score: PropTypes.number.isRequired,
       _id: PropTypes.string.isRequired,
@@ -54,6 +56,7 @@ class SearchPage extends Component {
       }).isRequired,
     })).isRequired,
     actions: PropTypes.shape({
+      updateCurrentPage: PropTypes.func.isRequired,
       handleSearch: PropTypes.func.isRequired,
       handleQueryChange: PropTypes.func.isRequired,
       triggerSearchState: PropTypes.func.isRequired,
@@ -68,6 +71,7 @@ class SearchPage extends Component {
   state = {
     isLoading: true,
     query: '',
+    page: undefined,
   };
 
   componentWillMount() {
@@ -81,27 +85,46 @@ class SearchPage extends Component {
   refreshPage = (search) => {
     this.props.actions.resetHistory();
     this.props.actions.exitFullScreen();
-    const { q } = QueryString.parse(search);
+    const { q, p } = QueryString.parse(search);
     if (!q) {
       this.props.routerActions.replace('/');
-    } else if (q !== this.state.query) {
-      this.setState({
-        query: q,
-      });
-      this.props.actions.triggerSearchState();
-      document.title = `${q} - AcceSE Search`;
-      this.handleSearch(q);
+    } else if (q !== this.state.query || p !== this.state.page) {
+      const page = p !== undefined ? parseInt(p, 10) : undefined;
+      if (page <= 0) {
+        this.props.routerActions.replace(`/search?${QueryString.stringify({ ...QueryString.parse(search), p: 1 })}`);
+      } else {
+        const state = {
+          query: q,
+          page,
+        };
+        this.setState(state);
+        this.props.actions.updateCurrentPage(page);
+        this.props.actions.triggerSearchState();
+        document.title = `${q} - AcceSE Search`;
+        this.handleSearch(q, page);
+      }
     }
   };
-  handleSearch = (query) => {
+  handleSearch = (query, page) => {
     this.setState({
       isLoading: true,
     });
     this.props.actions.handleQueryChange(query);
-    this.props.actions.handleSearch(query).then(
-      () => this.setState({
-        isLoading: false,
-      }),
+    this.props.actions.handleSearch(query, page).then(
+      () => {
+        if (!this.props.resDisMode) {
+          if (this.props.currentPage > 1) {
+            if (this.props.pages <= 0) {
+              this.props.routerActions.replace(`/search?${QueryString.stringify({ q: query, p: 1 })}`);
+            } else if (this.props.pages < this.props.currentPage) {
+              this.props.routerActions.replace(`/search?${QueryString.stringify({ q: query, p: this.props.pages })}`);
+            }
+          }
+        }
+        this.setState({
+          isLoading: false,
+        });
+      },
     ).catch(
       () => this.setState({
         isLoading: false,
@@ -126,6 +149,11 @@ class SearchPage extends Component {
       window.location = result._source.url;
     }
   };
+  handlePaginationClick = (page) => {
+    if (page > 0 && page <= this.props.pages) {
+      this.props.routerActions.push(`/search?${QueryString.stringify({ q: this.state.query, p: page })}`);
+    }
+  };
 
   renderLoader = () => (
     <LoaderScreen message="Loading Results..." />
@@ -141,8 +169,11 @@ class SearchPage extends Component {
           />
         ) : (
           <MultipleSearchResults
+            currentPage={this.props.currentPage}
+            pages={this.props.pages}
             results={this.props.results}
             handleResultClick={this.handleResultClick}
+            handlePaginationClick={this.handlePaginationClick}
           />
         )
       }

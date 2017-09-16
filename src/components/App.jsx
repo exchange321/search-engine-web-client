@@ -84,7 +84,11 @@ class App extends Component {
     }
   };
   handleSearch = (query) => {
-    this.props.routerActions.push(`/search?${QueryString.stringify({ q: query })}`);
+    let uri = `/search?${QueryString.stringify({ q: query })}`;
+    if (!this.props.resDisMode) {
+      uri += '&p=1';
+    }
+    this.props.routerActions.push(uri);
   };
   handleResultModeClick = () => {
     this.props.actions.toggleResDisMode();

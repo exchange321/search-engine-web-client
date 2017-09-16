@@ -22,13 +22,18 @@ export const getCompletions = (query, navDisMode) => (
 );
 
 // eslint-disable-next-line no-unused-vars
-export const getSearchResults = (query, navDisMode, page = false, visited = []) => (
+export const getSearchResults = (query, navDisMode, resDisMode, page = 1) => (
   new Promise((resolve, reject) => {
-    if (!page) {
-      fetch(`${apiUrl}/document?q=${query}&i=${navDisMode.toString()}`).then(res => res.json()).then((body) => {
-        resolve(body.hits.hits);
-      }).catch(reject);
+    let uri = `${apiUrl}/document?q=${query}&i=${navDisMode.toString()}`;
+    if (!resDisMode) {
+      uri += `&p=${page}`;
     }
+    fetch(uri).then(res => res.json()).then((body) => {
+      resolve({
+        pages: Math.ceil(body.hits.total / 10),
+        results: body.hits.hits,
+      });
+    }).catch(reject);
   })
 );
 

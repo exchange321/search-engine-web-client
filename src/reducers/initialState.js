@@ -31,6 +31,8 @@ const initialState = {
     },
   },
   searchPage: {
+    currentPage: 1,
+    pages: 0,
     results: [],
   },
   resultPage: {

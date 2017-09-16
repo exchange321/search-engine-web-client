@@ -1,4 +1,6 @@
 import toastr from 'toastr';
+import QueryString from 'query-string';
+import { routerActions } from 'react-router-redux';
 import { APP_ACTIONS } from './actionTypes';
 
 import * as SearchAPI from '../api/search';
@@ -34,6 +36,13 @@ export const toggleResDisMode = () => (
       type: APP_ACTIONS.TOGGLE_RESULTS_DISPLAY_MODE,
     });
     toastr.success('ResDisMode Switched!');
+    const search = QueryString.parse(window.location.search);
+    if (!getState().app.resDisMode) {
+      search.p = search.p || 1;
+    } else {
+      delete search.p;
+    }
+    dispatch(routerActions.replace(`${window.location.pathname}?${QueryString.stringify(search)}`));
   }
 );
 

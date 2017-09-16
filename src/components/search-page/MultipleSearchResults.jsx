@@ -6,18 +6,41 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import SearchResult from './SearchResult.jsx';
+import Pagination from './Pagination.jsx';
 
-const NSWSearchResults = ({ results, handleResultClick }) => (
+const NSWSearchResults = ({
+  currentPage,
+  pages,
+  results,
+  handleResultClick,
+  handlePaginationClick,
+}) => (
   <div className="search-results">
+    <div className="results-container">
+      {
+        results.map(result => (
+          <SearchResult key={result._id} result={result} onResultClick={handleResultClick} />
+        ))
+      }
+    </div>
     {
-      results.map(result => (
-        <SearchResult key={result._id} result={result} onResultClick={handleResultClick} />
-      ))
+      pages > 1 ? (
+        <nav aria-label="Search results navigation" className="paginations-container">
+          <Pagination
+            currentPage={currentPage}
+            pages={pages}
+            size={5}
+            handlePaginationClick={handlePaginationClick}
+          />
+        </nav>
+      ) : null
     }
   </div>
 );
 
 NSWSearchResults.propTypes = {
+  currentPage: PropTypes.number.isRequired,
+  pages: PropTypes.number.isRequired,
   results: PropTypes.arrayOf(PropTypes.shape({
     _score: PropTypes.number.isRequired,
     _id: PropTypes.string.isRequired,
@@ -29,6 +52,7 @@ NSWSearchResults.propTypes = {
     }).isRequired,
   })).isRequired,
   handleResultClick: PropTypes.func.isRequired,
+  handlePaginationClick: PropTypes.func.isRequired,
 };
 
 export default NSWSearchResults;
