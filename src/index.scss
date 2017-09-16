@@ -388,6 +388,7 @@ div.result-page-container {
     & .tools {
       text-align: right;
       margin-bottom: 1rem;
+      z-index: 1;
       @media #{$--md} {
         padding-right: 2.5rem;
       }
