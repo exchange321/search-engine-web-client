@@ -22,9 +22,9 @@ export const getCompletions = (query, navDisMode) => (
 );
 
 // eslint-disable-next-line no-unused-vars
-export const getSearchResults = (query, navDisMode, resDisMode, page = 1) => (
+export const getSearchResults = (query, navDisMode, resDisMode, page = 1, visited = []) => (
   new Promise((resolve, reject) => {
-    let uri = `${apiUrl}/document?q=${query}&i=${navDisMode.toString()}`;
+    let uri = `${apiUrl}/document?q=${query}&i=${navDisMode.toString()}${([...visited]).length > 0 ? `&e=${([...visited]).join(',')}` : ''}`;
     if (!resDisMode) {
       uri += `&p=${page}`;
     }
@@ -49,15 +49,12 @@ export const getDocument = (id, navDisMode) => (
   })
 );
 
-export const getNextDocument = (id, liked) => (
+// eslint-disable-next-line no-unused-vars
+export const getNextDocument = (query, navDisMode, visited) => (
   new Promise((resolve, reject) => {
-    getDocument(id).then((doc) => {
-      if (liked) {
-        resolve(doc._source.branches[0]);
-      } else {
-        resolve(doc._source.branches[1]);
-      }
-    }).catch(reject);
+    getSearchResults(query, navDisMode, false, 1, visited)
+      .then(({ results }) => resolve(results[0]._id))
+      .catch(reject);
   })
 );
 

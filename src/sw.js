@@ -50,13 +50,15 @@ const pushNotification = () => {
 
 const openWebsite = url => clients.openWindow(url);
 
+// eslint-disable-next-line no-unused-vars
 const handleNotificationActions = like => new Promise((resolve) => {
-  SearchAPI.getNextDocument(current._id, like)
-    .then(id => SearchAPI.getDocument(id))
+  SearchAPI.getNextDocument(query, false, visited)
+    .then(id => SearchAPI.getDocument(id, false))
     .then((doc) => {
       current = doc;
       pushNotification();
-      resolve(current._source.url);
+      console.log(visited, current);
+      resolve(current);
     })
     .catch(() => {
       self.registration.showNotification('ASE Search', {
@@ -114,7 +116,7 @@ self.addEventListener('message', (e) => {
     case 'root': {
       const { query: q, result } = e.data.info;
       query = q;
-      visited = [result.url];
+      visited = [result._id];
       current = result;
       pushNotification();
       break;
@@ -145,10 +147,10 @@ self.addEventListener('notificationclick', (e) => {
         break;
       }
     }
-  }).then((url) => {
-    if (url) {
-      visited.push(url);
-      return openWebsite(url);
+  }).then((doc) => {
+    if (doc) {
+      visited.push(doc._id);
+      return openWebsite(doc._source.url);
     }
     return openWebsite(`${e.srcElement.origin}/search?${QueryString.stringify({
       q: query,

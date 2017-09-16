@@ -41,6 +41,7 @@ class ResultPage extends Component {
     }).isRequired,
     fullscreen: PropTypes.bool.isRequired,
     history: PropTypes.arrayOf(PropTypes.string).isRequired,
+    visited: PropTypes.arrayOf(PropTypes.string).isRequired,
     actions: PropTypes.shape({
       handleQueryChange: PropTypes.func.isRequired,
       triggerSearchState: PropTypes.func.isRequired,
@@ -126,9 +127,10 @@ class ResultPage extends Component {
       });
     }
   };
+  // eslint-disable-next-line no-unused-vars
   handleGetNextDocument = (liked) => {
     this.togglePathDialog();
-    SearchAPI.getNextDocument(this.state.result._id, liked).then((id) => {
+    SearchAPI.getNextDocument(this.state.query, true, this.props.visited).then((id) => {
       this.props.routerActions.push(`/result?${QueryString.stringify({
         q: this.state.query,
         id,
@@ -140,7 +142,7 @@ class ResultPage extends Component {
   handlePageLoadError = () => {
     toastr.error(`'${this.state.result._source.title}' page has failed to load. Next document has retrieved.`);
     this.props.actions.revertHistory();
-    SearchAPI.getNextDocument(this.state.result._id, true).then((id) => {
+    SearchAPI.getNextDocument(this.state.query, true, this.props.visited).then((id) => {
       this.props.routerActions.replace(`/result?${QueryString.stringify({
         q: this.state.query,
         id,
