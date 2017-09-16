@@ -9,12 +9,13 @@ export const updateSearchSuggestions = suggestions => ({
 });
 
 export const handleQueryChange = query => (
-  (dispatch) => {
+  (dispatch, getState) => {
     dispatch({
       type: APP_ACTIONS.HANDLE_QUERY_CHANGE,
       query,
     });
-    SearchAPI.getCompletions(query).then(suggestions => (
+    const { navDisMode } = getState().app;
+    SearchAPI.getCompletions(query, navDisMode).then(suggestions => (
       dispatch(updateSearchSuggestions(suggestions))
     )).catch();
   }
@@ -45,6 +46,7 @@ export const toggleNavDisMode = () => (
       type: APP_ACTIONS.TOGGLE_NAV_DISPLAY_MODE,
     });
     toastr.success('NavDisMode Switched!');
+    window.location.reload();
   });
 
 export default () => {};

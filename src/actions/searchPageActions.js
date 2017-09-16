@@ -13,8 +13,9 @@ export const handleSearch = (q = null) => (
     if (query === null) {
       query = getState().app.search.query;
     }
+    const { navDisMode } = getState().app;
     if (query.length > 0) {
-      SearchAPI.getSearchResults(query)
+      SearchAPI.getSearchResults(query, navDisMode)
         .then((results) => {
           dispatch(updateSearchResults(results));
           resolve();

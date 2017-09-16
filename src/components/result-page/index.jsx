@@ -108,7 +108,7 @@ class ResultPage extends Component {
       this.props.actions.handleQueryChange(query);
       this.props.actions.addVisited(id);
       this.props.actions.triggerSearchState();
-      SearchAPI.getDocument(id).then((result) => {
+      SearchAPI.getDocument(id, true).then((result) => {
         this.setState({
           query,
           result,

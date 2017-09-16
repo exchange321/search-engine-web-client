@@ -1,13 +1,12 @@
 /* eslint-disable no-underscore-dangle */
-import { results } from './data';
 import CONFIG from './config';
 
 const apiUrl = CONFIG.API_URL;
 
-export const getCompletions = query => (
+export const getCompletions = (query, navDisMode) => (
   new Promise((resolve, reject) => {
     if (query.length > 0) {
-      fetch(`${apiUrl}/autocompletion?q=${query}`).then(res => res.json()).then((body) => {
+      fetch(`${apiUrl}/autocompletion?q=${query}&i=${navDisMode.toString()}`).then(res => res.json()).then((body) => {
         resolve(body.buckets.map(completion => ({
           ...completion,
           label: completion.key,
@@ -23,20 +22,25 @@ export const getCompletions = query => (
 );
 
 // eslint-disable-next-line no-unused-vars
-export const getSearchResults = (query, visited = []) => (
-  new Promise((resolve) => {
-    resolve(results.sort((a, b) => b._score - a._score));
+export const getSearchResults = (query, navDisMode, page = false, visited = []) => (
+  new Promise((resolve, reject) => {
+    if (!page) {
+      fetch(`${apiUrl}/document?q=${query}&i=${navDisMode.toString()}`).then(res => res.json()).then((body) => {
+        resolve(body.hits.hits);
+      }).catch(reject);
+    }
   })
 );
 
-export const getDocument = id => (
+export const getDocument = (id, navDisMode) => (
   new Promise((resolve, reject) => {
-    for (let i = 0; i < results.length; i += 1) {
-      if (results[i]._id === id) {
-        resolve({ ...results[i] });
+    fetch(`${apiUrl}/document?id=${id}&i=${navDisMode.toString()}`).then(res => res.json()).then((body) => {
+      if (body.hits.hits.length <= 0) {
+        throw new Error('No such document.');
+      } else {
+        resolve(body.hits.hits[0]);
       }
-    }
-    reject(new Error('No document found given the id.'));
+    }).catch(reject);
   })
 );
 

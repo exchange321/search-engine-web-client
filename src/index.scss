@@ -317,12 +317,19 @@ div.app-container {
       }
       & .text-container {
         flex: 1 0 auto;
-        width: 85%;
+        width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         @media #{$--md} {
           padding-left: 1rem;
+          width: 75%;
+        }
+        @media #{$--lg} {
+          width: 80%;
+        }
+        @media #{$--xl} {
+          width: 85%;
         }
         & a.result-title {
           color: #1a0dab;

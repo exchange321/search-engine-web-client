@@ -26,7 +26,6 @@ NSWSearchResults.propTypes = {
       description: PropTypes.string.isRequired,
       image: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
-      categories: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     }).isRequired,
   })).isRequired,
   handleResultClick: PropTypes.func.isRequired,
