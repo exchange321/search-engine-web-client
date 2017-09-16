@@ -6,6 +6,7 @@ const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 
 module.exports = {
   entry: [
+    'whatwg-fetch',
     `${__dirname}/src/index.js`,
   ],
   target: 'web',

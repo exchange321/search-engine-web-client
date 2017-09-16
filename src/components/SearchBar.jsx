@@ -88,6 +88,7 @@ Search.propTypes = {
   navDisMode: PropTypes.bool.isRequired,
   query: PropTypes.string.isRequired,
   suggestions: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
   })).isRequired,
   onQueryChange: PropTypes.func.isRequired,
