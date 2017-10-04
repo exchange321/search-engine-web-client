@@ -3,13 +3,12 @@ import CONFIG from './config';
 
 const apiUrl = CONFIG.API_URL;
 
-export const getCompletions = (query, navDisMode) => (
+export const getCompletions = query => (
   new Promise((resolve, reject) => {
     if (query.length > 0) {
-      fetch(`${apiUrl}/autocompletion?q=${query}&i=${navDisMode.toString()}`).then(res => res.json()).then((body) => {
-        resolve(body.buckets.map(completion => ({
-          ...completion,
-          label: completion.key,
+      fetch(`${apiUrl}/suggest?q=${query}`).then(res => res.json()).then(({ suggestions }) => {
+        resolve(suggestions.map(suggestion => ({
+          label: suggestion.text,
           key: Math.random().toString(36).substring(7),
         })));
       }).catch((err) => {
@@ -22,9 +21,16 @@ export const getCompletions = (query, navDisMode) => (
 );
 
 // eslint-disable-next-line no-unused-vars
-export const getSearchResults = (query, navDisMode, resDisMode, page = 1, visited = []) => (
+export const getSearchResults = (
+  query,
+  navDisMode,
+  resDisMode,
+  page = 1,
+  whitelist = [],
+  blacklist = [],
+) => (
   new Promise((resolve, reject) => {
-    let uri = `${apiUrl}/document?q=${query}&i=${navDisMode.toString()}${([...visited]).length > 0 ? `&e=${([...visited]).join(',')}` : ''}`;
+    let uri = `${apiUrl}/document?q=${query}&i=${navDisMode.toString()}${([...whitelist]).length > 0 ? `&w=${([...whitelist]).join(',')}` : ''}${([...blacklist]).length > 0 ? `&b=${([...blacklist]).join(',')}` : ''}`;
     if (!resDisMode) {
       uri += `&p=${page}`;
     }
@@ -50,10 +56,10 @@ export const getDocument = (id, navDisMode) => (
 );
 
 // eslint-disable-next-line no-unused-vars
-export const getNextDocument = (query, navDisMode, visited) => (
+export const getNextDocument = (query, navDisMode, whitelist, blacklist) => (
   new Promise((resolve, reject) => {
-    getSearchResults(query, navDisMode, false, 1, visited)
-      .then(({ results }) => resolve(results[0]._id))
+    getSearchResults(query, navDisMode, false, 1, whitelist, blacklist)
+      .then(({ results }) => resolve(results[0]))
       .catch(reject);
   })
 );

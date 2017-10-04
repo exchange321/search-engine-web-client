@@ -13,7 +13,8 @@ let assetsToCache = [...assets, './'];
 const delay = 5000;
 
 let query = '';
-let visited = [];
+let whitelist = [];
+let blacklist = [];
 let current;
 
 const pushNotification = () => {
@@ -51,13 +52,16 @@ const pushNotification = () => {
 const openWebsite = url => clients.openWindow(url);
 
 // eslint-disable-next-line no-unused-vars
-const handleNotificationActions = like => new Promise((resolve) => {
-  SearchAPI.getNextDocument(query, false, visited)
-    .then(id => SearchAPI.getDocument(id, false))
+const handleNotificationActions = liked => new Promise((resolve) => {
+  if (liked) {
+    whitelist = [...whitelist, current._id];
+  } else {
+    blacklist = [...blacklist, current._id];
+  }
+  SearchAPI.getNextDocument(query, false, whitelist, blacklist)
     .then((doc) => {
       current = doc;
       pushNotification();
-      console.log(visited, current);
       resolve(current);
     })
     .catch(() => {
@@ -116,7 +120,6 @@ self.addEventListener('message', (e) => {
     case 'root': {
       const { query: q, result } = e.data.info;
       query = q;
-      visited = [result._id];
       current = result;
       pushNotification();
       break;
@@ -149,7 +152,6 @@ self.addEventListener('notificationclick', (e) => {
     }
   }).then((doc) => {
     if (doc) {
-      visited.push(doc._id);
       return openWebsite(doc._source.url);
     }
     return openWebsite(`${e.srcElement.origin}/search?${QueryString.stringify({

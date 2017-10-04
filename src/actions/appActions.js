@@ -11,13 +11,12 @@ export const updateSearchSuggestions = suggestions => ({
 });
 
 export const handleQueryChange = query => (
-  (dispatch, getState) => {
+  (dispatch) => {
     dispatch({
       type: APP_ACTIONS.HANDLE_QUERY_CHANGE,
       query,
     });
-    const { navDisMode } = getState().app;
-    SearchAPI.getCompletions(query, navDisMode).then(suggestions => (
+    SearchAPI.getCompletions(query).then(suggestions => (
       dispatch(updateSearchSuggestions(suggestions))
     )).catch();
   }

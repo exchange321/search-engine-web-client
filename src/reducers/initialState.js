@@ -37,7 +37,6 @@ const initialState = {
   },
   resultPage: {
     fullscreen: false,
-    visited: new Set(),
     history: [],
     whitelist: [],
     blacklist: [],

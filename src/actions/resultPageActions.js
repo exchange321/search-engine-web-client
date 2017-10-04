@@ -27,4 +27,14 @@ export const exitFullScreen = () => ({
   type: RESULT_PAGE_ACTIONS.EXIT_FULL_SCREEN,
 });
 
+export const registerWhitelist = id => ({
+  type: RESULT_PAGE_ACTIONS.REGISTER_WHITELIST,
+  id,
+});
+
+export const registerBlacklist = id => ({
+  type: RESULT_PAGE_ACTIONS.REGISTER_BLACKLIST,
+  id,
+});
+
 export default () => {};

@@ -41,7 +41,8 @@ class ResultPage extends Component {
     }).isRequired,
     fullscreen: PropTypes.bool.isRequired,
     history: PropTypes.arrayOf(PropTypes.string).isRequired,
-    visited: PropTypes.arrayOf(PropTypes.string).isRequired,
+    whitelist: PropTypes.arrayOf(PropTypes.string).isRequired,
+    blacklist: PropTypes.arrayOf(PropTypes.string).isRequired,
     actions: PropTypes.shape({
       handleQueryChange: PropTypes.func.isRequired,
       triggerSearchState: PropTypes.func.isRequired,
@@ -50,6 +51,8 @@ class ResultPage extends Component {
       updateHistory: PropTypes.func.isRequired,
       resetHistory: PropTypes.func.isRequired,
       toggleFullScreen: PropTypes.func.isRequired,
+      registerWhitelist: PropTypes.func.isRequired,
+      registerBlacklist: PropTypes.func.isRequired,
     }).isRequired,
     routerActions: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -129,11 +132,25 @@ class ResultPage extends Component {
   };
   // eslint-disable-next-line no-unused-vars
   handleGetNextDocument = (liked) => {
+    let whitelist = [...this.props.whitelist];
+    let blacklist = [...this.props.blacklist];
+    if (liked) {
+      whitelist = [...whitelist, this.state.result._id];
+      this.props.actions.registerWhitelist(this.state.result._id);
+    } else {
+      blacklist = [...blacklist, this.state.result._id];
+      this.props.actions.registerBlacklist(this.state.result._id);
+    }
     this.togglePathDialog();
-    SearchAPI.getNextDocument(this.state.query, true, this.props.visited).then((id) => {
+    SearchAPI.getNextDocument(
+      this.state.query,
+      true,
+      whitelist,
+      blacklist,
+    ).then((doc) => {
       this.props.routerActions.push(`/result?${QueryString.stringify({
         q: this.state.query,
-        id,
+        id: doc._id,
       })}`);
     }).catch((e) => {
       toastr.error(e.message);
@@ -142,7 +159,12 @@ class ResultPage extends Component {
   handlePageLoadError = () => {
     toastr.error(`'${this.state.result._source.title}' page has failed to load. Next document has retrieved.`);
     this.props.actions.revertHistory();
-    SearchAPI.getNextDocument(this.state.query, true, this.props.visited).then((id) => {
+    SearchAPI.getNextDocument(
+      this.state.query,
+      true,
+      this.props.whitelist,
+      this.props.blacklist,
+    ).then((id) => {
       this.props.routerActions.replace(`/result?${QueryString.stringify({
         q: this.state.query,
         id,

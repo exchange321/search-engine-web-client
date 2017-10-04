@@ -126,9 +126,11 @@ class SearchPage extends Component {
         });
       },
     ).catch(
-      () => this.setState({
-        isLoading: false,
-      }),
+      () => {
+        this.setState({
+          isLoading: false,
+        });
+      },
     );
   };
   handleResultClick = (e, result) => {
