@@ -154,23 +154,30 @@ class ResultPage extends Component {
       })}`);
     }).catch((e) => {
       toastr.error(e.message);
+      this.props.routerActions.push(`/search?${QueryString.stringify({
+        q: this.state.query,
+      })}`);
     });
   };
   handlePageLoadError = () => {
     toastr.error(`'${this.state.result._source.title}' page has failed to load. Next document has retrieved.`);
     this.props.actions.revertHistory();
+    this.props.actions.registerBlacklist(this.state.result._id);
     SearchAPI.getNextDocument(
       this.state.query,
       true,
       this.props.whitelist,
-      this.props.blacklist,
-    ).then((id) => {
+      [...this.props.blacklist, this.state.result._id],
+    ).then((doc) => {
       this.props.routerActions.replace(`/result?${QueryString.stringify({
         q: this.state.query,
-        id,
+        id: doc._id,
       })}`);
     }).catch((e) => {
       toastr.error(e.message);
+      this.props.routerActions.push(`/search?${QueryString.stringify({
+        q: this.state.query,
+      })}`);
     });
   };
   togglePathDialog = () => {

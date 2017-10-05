@@ -4,6 +4,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import dummyImage from '../../images/no-image.gif';
 
 String.prototype.lastIndexOfRegex = function (regex, fromIndex) {
   const str = fromIndex ? this.substring(0, fromIndex) : this;
@@ -12,7 +13,11 @@ String.prototype.lastIndexOfRegex = function (regex, fromIndex) {
 };
 
 const SearchResult = ({ result, onResultClick }) => {
-  const { _source: { title, description, image, url } } = result;
+  const { _source: { description, image, url } } = result;
+  let { _source: { title } } = result;
+  if (title.length < 1) {
+    title = url;
+  }
   const width = document.body.offsetWidth;
   let titleCount = 0;
   let descCount = 0;
@@ -33,8 +38,8 @@ const SearchResult = ({ result, onResultClick }) => {
     <div className="search-result">
       <div className="img-container">
         <div className="img-res">
-          <div className="img-res-inner" style={{ backgroundImage: `url(${image})` }}>
-            <img src={image} className="hidden-xs-up" alt={title} />
+          <div className="img-res-inner" style={{ backgroundImage: `url(${image.length < 1 ? dummyImage : image})` }}>
+            <img src={image.length < 1 ? dummyImage : image} className="hidden-xs-up" alt={title} />
           </div>
         </div>
       </div>

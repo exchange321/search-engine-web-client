@@ -25,7 +25,7 @@ const NSWSearchResults = ({
     </div>
     {
       pages > 1 ? (
-        <nav aria-label="Search results navigation" className="paginations-container">
+        <nav aria-label="Search results navigation" className="pagination-container">
           <Pagination
             currentPage={currentPage}
             pages={pages}

@@ -59,7 +59,13 @@ export const getDocument = (id, navDisMode) => (
 export const getNextDocument = (query, navDisMode, whitelist, blacklist) => (
   new Promise((resolve, reject) => {
     getSearchResults(query, navDisMode, false, 1, whitelist, blacklist)
-      .then(({ results }) => resolve(results[0]))
+      .then(({ results }) => {
+        if (results && results.length > 0) {
+          resolve(results[0]);
+        } else {
+          throw new Error('We have run out of records! Please try another query!');
+        }
+      })
       .catch(reject);
   })
 );
