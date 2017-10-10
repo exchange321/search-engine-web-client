@@ -17,11 +17,14 @@ import LoaderScreen from '../common/LoaderScreen.jsx';
 import SingleSearchResults from './SingleSearchResults.jsx';
 import MultipleSearchResults from './MultipleSearchResults.jsx';
 
+import * as SearchAPI from '../../api/search';
+
 @connect(
   ({ app, searchPage }) => ({
     ...searchPage,
     resDisMode: app.resDisMode,
     navDisMode: app.navDisMode,
+    evaluationMode: app.evaluationMode,
   }),
   dispatch => ({
     actions: {
@@ -43,8 +46,10 @@ class SearchPage extends Component {
     }).isRequired,
     resDisMode: PropTypes.bool.isRequired,
     navDisMode: PropTypes.bool.isRequired,
+    evaluationMode: PropTypes.bool.isRequired,
     currentPage: PropTypes.number.isRequired,
     pages: PropTypes.number.isRequired,
+    onBaselineResultClick: PropTypes.func.isRequired,
     results: PropTypes.arrayOf(PropTypes.shape({
       _score: PropTypes.number.isRequired,
       _id: PropTypes.string.isRequired,
@@ -70,6 +75,8 @@ class SearchPage extends Component {
   };
   state = {
     isLoading: true,
+    took: 0,
+    total: 0,
     query: '',
     page: undefined,
   };
@@ -111,7 +118,7 @@ class SearchPage extends Component {
     });
     this.props.actions.handleQueryChange(query);
     this.props.actions.handleSearch(query, page).then(
-      () => {
+      ({ took, total }) => {
         if (!this.props.resDisMode) {
           if (this.props.currentPage > 1) {
             if (this.props.pages <= 0) {
@@ -123,6 +130,8 @@ class SearchPage extends Component {
         }
         this.setState({
           isLoading: false,
+          took,
+          total,
         });
       },
     ).catch(
@@ -133,9 +142,27 @@ class SearchPage extends Component {
       },
     );
   };
-  handleResultClick = (e, result) => {
+  handleResultClick = (e, result, id) => {
     e.preventDefault();
-    if (this.props.navDisMode) {
+    if (this.props.evaluationMode) {
+      const docId = ((this.props.currentPage - 1) * 10) + id + 1;
+      this.props.onBaselineResultClick(docId);
+      this.setState({
+        isLoading: true,
+      });
+      SearchAPI.getSearchResults(this.state.query, true, false, 1).then(({ results }) => {
+        this.setState({
+          isLoading: false,
+        }, () => {
+          this.props.routerActions.replace(`/result?${QueryString.stringify({
+            q: this.state.query,
+            id: results[0]._id,
+          })}`);
+        });
+      }).catch(() => this.setState({
+        isLoading: false,
+      }));
+    } else if (this.props.navDisMode) {
       this.props.routerActions.push(`/result?${QueryString.stringify({
         q: this.state.query,
         id: result._id,
@@ -163,6 +190,11 @@ class SearchPage extends Component {
 
   renderResults = () => (
     <div className="search-page-container container">
+      <div className="search-page-info">
+        <p className="text-right">
+          Retrieved {this.state.total} results ({(this.state.took / 1000).toFixed(2)} seconds)
+        </p>
+      </div>
       {
         this.props.resDisMode ? (
           <SingleSearchResults

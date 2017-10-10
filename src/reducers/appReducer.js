@@ -42,6 +42,18 @@ const appReducer = (state = initialState.app, action) => {
         navDisMode: !state.navDisMode,
       };
     }
+    case APP_ACTIONS.ENABLE_EVALUATION_MODE: {
+      return {
+        ...state,
+        evaluationMode: true,
+      };
+    }
+    case APP_ACTIONS.DISABLE_EVALUATION_MODE: {
+      return {
+        ...state,
+        evaluationMode: false,
+      };
+    }
     default: {
       return state;
     }

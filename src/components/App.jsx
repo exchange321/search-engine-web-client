@@ -12,6 +12,7 @@ import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEve
 import applyUpdate from 'serviceworker-webpack-plugin/lib/browser/applyUpdate';
 import QueryString from 'query-string';
 import toastr from 'toastr';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import * as appActions from '../actions/appActions';
 
@@ -31,8 +32,12 @@ import ResultPage from './result-page/index.jsx';
 )
 class App extends Component {
   static propTypes = {
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
     resDisMode: PropTypes.bool.isRequired,
     navDisMode: PropTypes.bool.isRequired,
+    evaluationMode: PropTypes.bool.isRequired,
     fullscreen: PropTypes.bool.isRequired,
     search: PropTypes.shape({
       query: PropTypes.string.isRequired,
@@ -47,10 +52,21 @@ class App extends Component {
       triggerSearchState: PropTypes.func.isRequired,
       toggleResDisMode: PropTypes.func.isRequired,
       toggleNavDisMode: PropTypes.func.isRequired,
+      enableEvaluationMode: PropTypes.func.isRequired,
+      disableEvaluationMode: PropTypes.func.isRequired,
     }).isRequired,
     routerActions: PropTypes.shape({
       push: PropTypes.func.isRequired,
     }).isRequired,
+  };
+  state = {
+    resDisMode: undefined,
+    navDisMode: undefined,
+    showModal: false,
+    modalTitle: '',
+    modalMessage: <p />,
+    baselineRank: 0,
+    improvedRank: 0,
   };
   componentWillMount() {
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
@@ -110,10 +126,82 @@ class App extends Component {
       this.props.actions.toggleNavDisMode();
     }
   };
+  handleEvaluationClick = () => {
+    toastr.success('Start Evaluation.');
+    this.props.actions.enableEvaluationMode();
+    this.setState({
+      resDisMode: this.props.resDisMode,
+      navDisMode: this.props.navDisMode,
+      modalTitle: '',
+      modalMessage: <p />,
+      baselineRank: 0,
+      improvedRank: 0,
+    });
+    if (!this.props.navDisMode) {
+      this.props.actions.toggleNavDisMode();
+    }
+    if (this.props.resDisMode) {
+      this.props.actions.toggleResDisMode();
+    }
+    this.setState({
+      modalTitle: 'Evaluation - Baseline Model',
+      modalMessage: <p className="lead">Please select the <strong>FIRST</strong> relevant document from the results.</p>,
+    }, this.toggleModal);
+  };
+  handleBaselineResultClick = (docId) => {
+    const baselineRank = 1 / docId;
+    this.setState({
+      baselineRank,
+      modalTitle: 'Evaluation - Improved Model',
+      modalMessage: <p className="lead">Please navigate the results and press <em>Completed</em> once a relevant document is shown.</p>,
+    }, () => {
+      this.toggleModal();
+    });
+  };
+  handleImprovedResultClick = (docId) => {
+    const improvedRank = 1 / docId;
+    this.setState({
+      improvedRank,
+    }, () => {
+      this.setState({
+        modalTitle: 'Evaluation - Result',
+        modalMessage: (
+          <div>
+            <p className="h4">Reciprocal Rank (Higher is Better)</p>
+            <ul>
+              <li className={`lead ${this.state.baselineRank >= this.state.improvedRank ? 'font-weight-bold' : ''}`}>
+                Baseline Model: {this.state.baselineRank.toFixed(2)}
+              </li>
+              <li className={`lead ${this.state.improvedRank >= this.state.baselineRank ? 'font-weight-bold' : ''}`}>
+                Improved Model: {this.state.improvedRank.toFixed(2)}
+              </li>
+            </ul>
+          </div>
+        ),
+      }, () => {
+        this.toggleModal();
+        if (this.props.resDisMode !== this.state.resDisMode) {
+          this.handleResultModeClick();
+        }
+        if (this.props.navDisMode !== this.state.navDisMode) {
+          this.handleNavModeClick();
+        }
+        this.props.actions.disableEvaluationMode();
+        toastr.success('Evaluation Completed.');
+      });
+    });
+  };
+  toggleModal = () => this.setState({
+    showModal: !this.state.showModal,
+  });
   render() {
     const {
       resDisMode,
       navDisMode,
+      evaluationMode,
+      location: {
+        pathname,
+      },
       search: {
         query,
         triggered,
@@ -123,25 +211,37 @@ class App extends Component {
     } = this.props;
     return (
       <div className="app-container">
-        <div className={`background ${fullscreen ? 'full-screen' : ''}`}>
+        <div className={`background ${fullscreen ? 'full-screen' : ''} ${evaluationMode ? 'evaluation' : ''}`}>
           <div className="snow" />
         </div>
         <div className={`search-container container ${!triggered ? 'full' : ''}`}>
           <Search
             resDisMode={resDisMode}
             navDisMode={navDisMode}
+            evaluationMode={evaluationMode}
             query={query}
+            pathname={pathname}
             suggestions={suggestions}
             onQueryChange={this.handleQueryChange}
             onFormSubmit={this.handleSearchFormSubmit}
             onResultModeClick={this.handleResultModeClick}
             onNavModeClick={this.handleNavModeClick}
+            onEvaluationClick={this.handleEvaluationClick}
           />
         </div>
         <Switch>
-          <Route path="/search" component={SearchPage} />
-          <Route path="/result" component={ResultPage} />
+          <Route path="/search" render={props => <SearchPage {...props} onBaselineResultClick={this.handleBaselineResultClick} />} />
+          <Route path="/result" render={props => <ResultPage {...props} onImprovedResultClick={this.handleImprovedResultClick} />} />
         </Switch>
+        <Modal isOpen={this.state.showModal} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>{this.state.modalTitle}</ModalHeader>
+          <ModalBody>
+            {this.state.modalMessage}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.toggleModal}>Close</Button>
+          </ModalFooter>
+        </Modal>
       </div>
     );
   }

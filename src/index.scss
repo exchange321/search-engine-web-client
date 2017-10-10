@@ -80,6 +80,27 @@ body {
   100% {background-position: 500px 1000px, 200px 400px, -100px 300px;}
 }
 
+@keyframes eval {
+  0% {border-color: pink;}
+  50% {border-color: red;}
+  100% {border-color: pink;}
+}
+@-moz-keyframes eval {
+  0% {border-color: pink;}
+  50% {border-color: red;}
+  100% {border-color: pink;}
+}
+@-webkit-keyframes eval {
+  0% {border-color: pink;}
+  50% {border-color: red;}
+  100% {border-color: pink;}
+}
+@-ms-keyframes eval {
+  0% {border-color: pink;}
+  50% {border-color: red;}
+  100% {border-color: pink;}
+}
+
 /* ANIMATION - END */
 
 /* --------------------------------------------------------------------------------- */
@@ -104,6 +125,18 @@ div.app-container {
       background: #ccc linear-gradient(#eee, #ccc);
       bottom: auto;
       height: 4rem;
+    }
+    &.evaluation {
+      -webkit-transition: border-color .3s ease-in-out;
+      -moz-transition: border-color .3s ease-in-out;
+      -ms-transition: border-color .3s ease-in-out;
+      -o-transition: border-color .3s ease-in-out;
+      transition: border-color .3s ease-in-out;
+      border: 6px solid red;
+      -webkit-animation: eval 1s linear infinite;
+      -moz-animation: eval 1s linear infinite;
+      -ms-animation: eval 1s linear infinite;
+      animation: eval 1s linear infinite;
     }
     & .snow {
       position: absolute;
@@ -195,12 +228,14 @@ div.app-container {
               background-color: #025aa5;
               color: white;
             }
-            & i.fa-search {
-              margin-right: .5rem;
-            }
             @media #{$--xs-sm} {
               & span {
                 display: none;
+              }
+            }
+            @media #{$--md} {
+              & i.fa-search {
+                margin-right: .5rem;
               }
             }
           }

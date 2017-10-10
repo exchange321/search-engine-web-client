@@ -4,10 +4,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Tools = ({ fullscreen, handleFullScreenClick, handlePrevClick, handleNextClick }) => (
+const Tools = ({
+  evaluationMode,
+  fullscreen,
+  handleFullScreenClick,
+  handleNextClick,
+  handleCompletedClick,
+}) => (
   <div className={`tools ${fullscreen ? 'full-screen' : ''}`}>
     <div className="btn-group btn-group-lg">
-      <button className="btn btn-secondary" onClick={handlePrevClick}><span className="icon-container icon-left"><i className="fa fa-arrow-left" /></span> <span className="hidden-sm-down">Prev</span></button>
+      {
+        evaluationMode ? (
+          <button className="btn btn-secondary" onClick={handleCompletedClick}>
+            <span><span className="hidden-sm-down">Completed</span> <span><i className="fa fa-check" /></span></span>
+          </button>
+        ) : null
+      }
       <button className="btn btn-secondary" onClick={handleFullScreenClick}>
         {
           fullscreen ? (
@@ -23,10 +35,11 @@ const Tools = ({ fullscreen, handleFullScreenClick, handlePrevClick, handleNextC
 );
 
 Tools.propTypes = {
+  evaluationMode: PropTypes.bool.isRequired,
   fullscreen: PropTypes.bool.isRequired,
   handleFullScreenClick: PropTypes.func.isRequired,
-  handlePrevClick: PropTypes.func.isRequired,
   handleNextClick: PropTypes.func.isRequired,
+  handleCompletedClick: PropTypes.func.isRequired,
 };
 
 export default Tools;

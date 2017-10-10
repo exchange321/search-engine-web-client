@@ -55,6 +55,15 @@ export const toggleNavDisMode = () => (
     });
     toastr.success('NavDisMode Switched!');
     window.location.reload();
-  });
+  }
+);
+
+export const enableEvaluationMode = () => ({
+  type: APP_ACTIONS.ENABLE_EVALUATION_MODE,
+});
+
+export const disableEvaluationMode = () => ({
+  type: APP_ACTIONS.DISABLE_EVALUATION_MODE,
+});
 
 export default () => {};

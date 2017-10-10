@@ -8,14 +8,17 @@ import AutoComplete from 'react-autocomplete';
 import { UncontrolledButtonDropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
 
 const Search = ({
+  pathname,
   resDisMode,
   navDisMode,
+  evaluationMode,
   query,
   suggestions,
   onQueryChange,
   onFormSubmit,
   onResultModeClick,
   onNavModeClick,
+  onEvaluationClick,
 }) => (
   <div className="search">
     <form
@@ -65,17 +68,31 @@ const Search = ({
             className="btn btn-outline-primary btn-submit input-group-addon"
             type="submit"
             title="Submit Search Query"
+            disabled={evaluationMode}
           >
             <i className="fa fa-search" /> <span>Search</span>
           </button>
           <UncontrolledButtonDropdown>
-            <DropdownToggle>
+            <DropdownToggle disabled={evaluationMode}>
               <i className="fa fa-ellipsis-v" />
             </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem onClick={onResultModeClick}>ResDis - { resDisMode ? 'Classic' : 'Custom' }</DropdownItem>
-              <DropdownItem onClick={onNavModeClick}>NavDis - { navDisMode ? 'Notification' : 'iFrame' }</DropdownItem>
-            </DropdownMenu>
+            {
+              pathname !== '/result' && !evaluationMode ? (
+                <DropdownMenu right>
+                  <DropdownItem onClick={onResultModeClick}>ResDis - Switch to { resDisMode ? 'Classic' : 'Custom' }</DropdownItem>
+                  <DropdownItem onClick={onNavModeClick}>NavDis - Switch to { navDisMode ? 'Notification' : 'iFrame' }</DropdownItem>
+                  {
+                    pathname === '/search' && !evaluationMode ? (
+                      <DropdownItem onClick={onEvaluationClick}>Start Evaluation</DropdownItem>
+                    ) : null
+                  }
+                </DropdownMenu>
+              ) : (
+                <DropdownMenu right>
+                  <DropdownItem disabled>No Setting Available</DropdownItem>
+                </DropdownMenu>
+              )
+            }
           </UncontrolledButtonDropdown>
         </div>
       </div>
@@ -84,8 +101,10 @@ const Search = ({
 );
 
 Search.propTypes = {
+  pathname: PropTypes.string.isRequired,
   resDisMode: PropTypes.bool.isRequired,
   navDisMode: PropTypes.bool.isRequired,
+  evaluationMode: PropTypes.bool.isRequired,
   query: PropTypes.string.isRequired,
   suggestions: PropTypes.arrayOf(PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -95,6 +114,7 @@ Search.propTypes = {
   onFormSubmit: PropTypes.func.isRequired,
   onResultModeClick: PropTypes.func.isRequired,
   onNavModeClick: PropTypes.func.isRequired,
+  onEvaluationClick: PropTypes.func.isRequired,
 };
 
 export default Search;

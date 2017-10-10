@@ -24,6 +24,7 @@ const initialState = {
     resDisMode: getResDisModeValue(),
     // true => iFrame, false => Web Notification
     navDisMode: getNavDisMode(),
+    evaluationMode: false,
     search: {
       query: '',
       triggered: false,

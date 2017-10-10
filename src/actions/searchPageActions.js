@@ -22,9 +22,9 @@ export const handleSearch = (q = null, p = 1) => (
     const { resDisMode, navDisMode } = getState().app;
     if (query.length > 0) {
       SearchAPI.getSearchResults(query, navDisMode, resDisMode, p)
-        .then(({ pages, results }) => {
+        .then(({ took, total, pages, results }) => {
           dispatch(updateSearchResults(pages, results));
-          resolve();
+          resolve({ took, total });
         })
         .catch();
     }

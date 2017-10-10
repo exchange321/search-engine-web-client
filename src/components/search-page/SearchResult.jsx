@@ -12,7 +12,7 @@ String.prototype.lastIndexOfRegex = function (regex, fromIndex) {
   return match ? str.lastIndexOf(match[match.length - 1]) : -1;
 };
 
-const SearchResult = ({ result, onResultClick }) => {
+const SearchResult = ({ id, result, onResultClick }) => {
   const { _source: { description, image, url } } = result;
   let { _source: { title } } = result;
   if (title.length < 1) {
@@ -49,7 +49,7 @@ const SearchResult = ({ result, onResultClick }) => {
             href={url}
             className="h5 result-title"
             title={title}
-            onClick={e => onResultClick(e, result)}
+            onClick={e => onResultClick(e, result, id)}
           >
             {
               title.length > titleCount ? `${title.slice(0, title.lastIndexOfRegex(/\W+/, titleCount - 2))} ...` : title
@@ -71,6 +71,7 @@ const SearchResult = ({ result, onResultClick }) => {
 };
 
 SearchResult.propTypes = {
+  id: PropTypes.number.isRequired,
   result: PropTypes.shape({
     _score: PropTypes.number.isRequired,
     _id: PropTypes.string.isRequired,

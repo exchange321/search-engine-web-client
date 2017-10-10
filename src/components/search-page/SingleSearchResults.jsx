@@ -9,7 +9,7 @@ import SearchResult from './SearchResult.jsx';
 const SingleSearchResults = ({ result, handleResultClick }) => (
   <div className="search-results">
     <div className="results-container">
-      <SearchResult result={result} onResultClick={handleResultClick} />
+      <SearchResult result={result} id={0} onResultClick={handleResultClick} />
     </div>
   </div>
 );

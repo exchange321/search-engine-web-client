@@ -36,6 +36,8 @@ export const getSearchResults = (
     }
     fetch(uri).then(res => res.json()).then((body) => {
       resolve({
+        took: body.took,
+        total: body.hits.total,
         pages: Math.ceil(body.hits.total / 10),
         results: body.hits.hits,
       });

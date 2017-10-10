@@ -23,8 +23,9 @@ import LoaderScreen from '../common/LoaderScreen.jsx';
 import PageContainer from './PageContainer.jsx';
 
 @connect(
-  ({ resultPage }) => ({
+  ({ app, resultPage }) => ({
     ...resultPage,
+    evaluationMode: app.evaluationMode,
   }),
   dispatch => ({
     actions: {
@@ -39,10 +40,12 @@ class ResultPage extends Component {
     location: PropTypes.shape({
       search: PropTypes.string.isRequired,
     }).isRequired,
+    evaluationMode: PropTypes.bool.isRequired,
     fullscreen: PropTypes.bool.isRequired,
     history: PropTypes.arrayOf(PropTypes.string).isRequired,
     whitelist: PropTypes.arrayOf(PropTypes.string).isRequired,
     blacklist: PropTypes.arrayOf(PropTypes.string).isRequired,
+    onImprovedResultClick: PropTypes.func.isRequired,
     actions: PropTypes.shape({
       handleQueryChange: PropTypes.func.isRequired,
       triggerSearchState: PropTypes.func.isRequired,
@@ -94,6 +97,13 @@ class ResultPage extends Component {
   };
   handleToolsNextClick = () => {
     this.togglePathDialog();
+  };
+  handleToolsCompletedClick = () => {
+    const docId = this.props.whitelist.length + this.props.blacklist.length + 1;
+    this.props.onImprovedResultClick(docId);
+    this.props.routerActions.replace(`/search?${QueryString.stringify({
+      q: this.state.query,
+    })}`);
   };
   refreshPage = (search) => {
     const { q: query, id } = QueryString.parse(search);
@@ -191,11 +201,13 @@ class ResultPage extends Component {
   renderPage = () => (
     <div className="result-page-container container">
       <PageContainer
+        evaluationMode={this.props.evaluationMode}
         fullscreen={this.props.fullscreen}
         result={this.state.result}
         handleFullScreenClick={this.handleToolsFullScreenClick}
         handlePrevClick={this.handleToolsPrevClick}
         handleNextClick={this.handleToolsNextClick}
+        handleCompletedClick={this.handleToolsCompletedClick}
         handlePageLoadError={this.handlePageLoadError}
       />
       <Modal isOpen={this.state.dialog} toggle={this.togglePathDialog} className="next-result-modal">

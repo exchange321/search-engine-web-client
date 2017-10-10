@@ -18,8 +18,13 @@ const NSWSearchResults = ({
   <div className="search-results">
     <div className="results-container">
       {
-        results.map(result => (
-          <SearchResult key={result._id} result={result} onResultClick={handleResultClick} />
+        results.map((result, key) => (
+          <SearchResult
+            key={result._id}
+            id={key}
+            result={result}
+            onResultClick={handleResultClick}
+          />
         ))
       }
     </div>

@@ -8,20 +8,24 @@ import Tools from './Tools.jsx';
 import Page from './Page.jsx';
 
 const PageContainer = ({
+  evaluationMode,
   fullscreen,
   result,
   handleFullScreenClick,
   handlePrevClick,
   handleNextClick,
+  handleCompletedClick,
   handlePageLoadError,
 }) => (
   <div className="page-container">
     <Tools
       result={result}
+      evaluationMode={evaluationMode}
       fullscreen={fullscreen}
       handleFullScreenClick={handleFullScreenClick}
       handlePrevClick={handlePrevClick}
       handleNextClick={handleNextClick}
+      handleCompletedClick={handleCompletedClick}
     />
     <Page
       title={result._source.title}
@@ -33,6 +37,7 @@ const PageContainer = ({
 );
 
 PageContainer.propTypes = {
+  evaluationMode: PropTypes.bool.isRequired,
   fullscreen: PropTypes.bool.isRequired,
   result: PropTypes.shape({
     _id: PropTypes.string.isRequired,
@@ -47,6 +52,7 @@ PageContainer.propTypes = {
   handleFullScreenClick: PropTypes.func.isRequired,
   handlePrevClick: PropTypes.func.isRequired,
   handleNextClick: PropTypes.func.isRequired,
+  handleCompletedClick: PropTypes.func.isRequired,
   handlePageLoadError: PropTypes.func.isRequired,
 };
 
