@@ -37,6 +37,7 @@ const Search = ({
               id: 'query',
               name: 'query',
               className: 'form-control',
+              disabled: evaluationMode,
             }}
             wrapperStyle={{}}
             wrapperProps={{

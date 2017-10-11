@@ -81,24 +81,15 @@ body {
 }
 
 @keyframes eval {
-  0% {border-color: pink;}
-  50% {border-color: red;}
-  100% {border-color: pink;}
-}
-@-moz-keyframes eval {
-  0% {border-color: pink;}
-  50% {border-color: red;}
-  100% {border-color: pink;}
-}
-@-webkit-keyframes eval {
-  0% {border-color: pink;}
-  50% {border-color: red;}
-  100% {border-color: pink;}
-}
-@-ms-keyframes eval {
-  0% {border-color: pink;}
-  50% {border-color: red;}
-  100% {border-color: pink;}
+  0% {
+    box-shadow: inset 0 0 2rem pink;
+  }
+  50% {
+    box-shadow: inset 0 0 6rem darkred;
+  }
+  100% {
+    box-shadow: inset 0 0 2rem pink;
+  }
 }
 
 /* ANIMATION - END */
@@ -127,18 +118,17 @@ div.app-container {
       height: 4rem;
     }
     &.evaluation {
-      -webkit-transition: border-color .3s ease-in-out;
-      -moz-transition: border-color .3s ease-in-out;
-      -ms-transition: border-color .3s ease-in-out;
-      -o-transition: border-color .3s ease-in-out;
-      transition: border-color .3s ease-in-out;
-      border: 6px solid red;
+      @include --transition-all();
       -webkit-animation: eval 1s linear infinite;
       -moz-animation: eval 1s linear infinite;
       -ms-animation: eval 1s linear infinite;
       animation: eval 1s linear infinite;
+      & .snow {
+        background-color: rgba(255, 0, 0, .2);
+      }
     }
     & .snow {
+      @include --transition-all();
       position: absolute;
       top: 0;
       right: 0;

@@ -12,7 +12,7 @@ import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEve
 import applyUpdate from 'serviceworker-webpack-plugin/lib/browser/applyUpdate';
 import QueryString from 'query-string';
 import toastr from 'toastr';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import * as appActions from '../actions/appActions';
 
@@ -64,7 +64,8 @@ class App extends Component {
     navDisMode: undefined,
     showModal: false,
     modalTitle: '',
-    modalMessage: <p />,
+    modalMessage: '',
+    modalFooter: '',
     baselineRank: 0,
     improvedRank: 0,
   };
@@ -72,6 +73,7 @@ class App extends Component {
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
       this.registerServiceWorker();
     }
+    window.localStorage.removeItem('storedRanks');
   }
   registerServiceWorker = () => {
     const registration = runtime.register();
@@ -127,33 +129,91 @@ class App extends Component {
     }
   };
   handleEvaluationClick = () => {
+    this.setState({
+      modalTitle: (
+        <h4 className="modal-title text-danger">Enabling Evaluation Mode</h4>
+      ),
+      modalMessage: (
+        <div>
+          <div className="alert alert-danger" role="alert">
+            <strong>
+              This mode is for testing purpose only.
+              Please leave if entered unintentionally.
+            </strong>
+          </div>
+          <p className="h5">
+            <strong className="text-danger">Query cannot be changed during evaluation.</strong>
+          </p>
+          <p className="lead">
+            Please make sure the query is properly submitted before proceeding.
+          </p>
+          <p className="lead">
+            The evaluation consists of three steps:
+            <ul>
+              <li>Step 1 - Baseline Model</li>
+              <li>Step 2 - Improved Model</li>
+              <li>Step 3 - Evaluation Result</li>
+            </ul>
+            Please follow the on-screen instructions to conduct a meaningful evaluation.
+          </p>
+        </div>
+      ),
+      modalFooter: (
+        <div className="btn-group">
+          <button className="btn btn-outline-danger" onClick={this.handleEvaluationProceedClick}>Proceed</button>
+          <button className="btn btn-primary" onClick={this.toggleModal}>Cancel</button>
+        </div>
+      ),
+    }, this.toggleModal);
+  };
+  handleEvaluationProceedClick = () => {
     toastr.success('Start Evaluation.');
     this.props.actions.enableEvaluationMode();
     this.setState({
       resDisMode: this.props.resDisMode,
       navDisMode: this.props.navDisMode,
       modalTitle: '',
-      modalMessage: <p />,
+      modalMessage: '',
+      modalFooter: '',
       baselineRank: 0,
       improvedRank: 0,
+    }, () => {
+      if (!this.props.navDisMode) {
+        this.props.actions.toggleNavDisMode();
+      }
+      if (this.props.resDisMode) {
+        this.props.actions.toggleResDisMode();
+      }
+      this.setState({
+        modalTitle: (
+          <h4 className="modal-title">Evaluation - Step 1 - Baseline Model</h4>
+        ),
+        modalMessage: (
+          <p className="lead">Please select the <strong>FIRST</strong> relevant document from the results.</p>
+        ),
+        modalFooter: (
+          <div>
+            <button className="btn btn-primary" onClick={this.toggleModal}>Close</button>
+          </div>
+        ),
+      });
     });
-    if (!this.props.navDisMode) {
-      this.props.actions.toggleNavDisMode();
-    }
-    if (this.props.resDisMode) {
-      this.props.actions.toggleResDisMode();
-    }
-    this.setState({
-      modalTitle: 'Evaluation - Baseline Model',
-      modalMessage: <p className="lead">Please select the <strong>FIRST</strong> relevant document from the results.</p>,
-    }, this.toggleModal);
   };
   handleBaselineResultClick = (docId) => {
     const baselineRank = 1 / docId;
     this.setState({
       baselineRank,
-      modalTitle: 'Evaluation - Improved Model',
-      modalMessage: <p className="lead">Please navigate the results and press <em>Completed</em> once a relevant document is shown.</p>,
+      modalTitle: (
+        <h4 className="modal-title">Evaluation - Step 2 - Improved Model</h4>
+      ),
+      modalMessage: (
+        <p className="lead">Please navigate the results and press <em>Completed</em> once a relevant document is shown.</p>
+      ),
+      modalFooter: (
+        <div>
+          <button className="btn btn-primary" onClick={this.toggleModal}>Close</button>
+        </div>
+      ),
     }, () => {
       this.toggleModal();
     });
@@ -163,19 +223,39 @@ class App extends Component {
     this.setState({
       improvedRank,
     }, () => {
+      let storedRanks = JSON.parse(window.localStorage.getItem('storedRanks') || '[]');
+      storedRanks = JSON.stringify([...storedRanks, {
+        query: this.props.search.query,
+        reciprocal_rank: {
+          baseline_model: this.state.baselineRank,
+          improved_model: this.state.improvedRank,
+        },
+      }], null, 4);
+      window.localStorage.setItem('storedRanks', storedRanks);
+      const rankingString = `data:text/json;charset=utf-8,${encodeURIComponent(storedRanks)}`;
       this.setState({
-        modalTitle: 'Evaluation - Result',
+        modalTitle: (
+          <h4 className="modal-title">Evaluation - Step 3 - Result</h4>
+        ),
         modalMessage: (
           <div>
-            <p className="h4">Reciprocal Rank (Higher is Better)</p>
-            <ul>
-              <li className={`lead ${this.state.baselineRank >= this.state.improvedRank ? 'font-weight-bold' : ''}`}>
-                Baseline Model: {this.state.baselineRank.toFixed(2)}
-              </li>
-              <li className={`lead ${this.state.improvedRank >= this.state.baselineRank ? 'font-weight-bold' : ''}`}>
-                Improved Model: {this.state.improvedRank.toFixed(2)}
-              </li>
-            </ul>
+            <p className="lead">Query: {this.props.search.query}</p>
+            <p>Reciprocal Rank (Higher is Better)
+              <ul>
+                <li className={`${this.state.baselineRank >= this.state.improvedRank ? 'font-weight-bold' : ''}`}>
+                  Baseline Model: {this.state.baselineRank.toFixed(2)}
+                </li>
+                <li className={`${this.state.improvedRank >= this.state.baselineRank ? 'font-weight-bold' : ''}`}>
+                  Improved Model: {this.state.improvedRank.toFixed(2)}
+                </li>
+              </ul>
+            </p>
+          </div>
+        ),
+        modalFooter: (
+          <div className="btn-group">
+            <a target="_blank" href={rankingString} download="results.json" className="btn btn-outline-primary">Download Results</a>
+            <button className="btn btn-primary" onClick={this.toggleModal}>Close</button>
           </div>
         ),
       }, () => {
@@ -233,13 +313,13 @@ class App extends Component {
           <Route path="/search" render={props => <SearchPage {...props} onBaselineResultClick={this.handleBaselineResultClick} />} />
           <Route path="/result" render={props => <ResultPage {...props} onImprovedResultClick={this.handleImprovedResultClick} />} />
         </Switch>
-        <Modal isOpen={this.state.showModal} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal}>{this.state.modalTitle}</ModalHeader>
+        <Modal isOpen={this.state.showModal} backdrop="static">
+          <ModalHeader>{this.state.modalTitle}</ModalHeader>
           <ModalBody>
             {this.state.modalMessage}
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.toggleModal}>Close</Button>
+            {this.state.modalFooter}
           </ModalFooter>
         </Modal>
       </div>
