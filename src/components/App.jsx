@@ -254,7 +254,7 @@ class App extends Component {
         ),
         modalFooter: (
           <div className="btn-group">
-            <a target="_blank" href={rankingString} download="results.json" className="btn btn-outline-primary">Download Results</a>
+            <a target="_blank" href={rankingString} download="results.json" className="btn btn-outline-success">Download Results</a>
             <button className="btn btn-primary" onClick={this.toggleModal}>Close</button>
           </div>
         ),
