@@ -52,7 +52,7 @@ const SearchResult = ({ id, result, onResultClick }) => {
             onClick={e => onResultClick(e, result, id)}
           >
             {
-              title.length > titleCount ? `${title.slice(0, title.lastIndexOfRegex(/\W+/, titleCount - 2))} ...` : title
+              title.length > titleCount ? `${title.slice(0, title.lastIndexOfRegex(/\W+/gi, titleCount - 2))} ...` : title
             }
           </a>
         </div>
@@ -64,7 +64,11 @@ const SearchResult = ({ id, result, onResultClick }) => {
               ) : url
           }
         </cite>
-        <p className="result-description">{description.length > descCount ? `${description.slice(0, description.lastIndexOfRegex(/\W+/, descCount - 2))} ...` : description}</p>
+        <p className="result-description">
+          {
+            description.length > descCount ? `${description.slice(0, description.lastIndexOfRegex(/\W+/gi, descCount - 2))} ...` : description
+          }
+        </p>
       </div>
     </div>
   );
